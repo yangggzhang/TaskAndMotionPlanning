@@ -1,0 +1,9 @@
+[submodule "src/tutorial/-b"]
+	path = src/tutorial/-b
+	url = https://github.com/ros-planning/moveit_tutorials.git
+[submodule "src/tutorial/panda_moveit_config"]
+	path = src/tutorial/panda_moveit_config
+	url = https://github.com/ros-planning/panda_moveit_config.git
+[submodule "src/tutorial/moveit_tutorials"]
+	path = src/tutorial/moveit_tutorials
+	url = https://github.com/ros-planning/moveit_tutorials.git
