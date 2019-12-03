@@ -137,7 +137,13 @@ include_directories(
 ## Declare a C++ library
 add_library(${PROJECT_NAME}
   src/planning_scene.cpp
+  src/planning_scene_param.cpp
+  src/task_motion_planner.cpp
 )
+
+
+add_executable(TAMP_node node/TAMP_node.cpp)
+target_link_libraries(TAMP_node ${PROJECT_NAME} ${catkin_LIBRARIES} )
 
 ## Add cmake target dependencies of the library
 ## as an example, code may need to be generated before libraries
@@ -198,6 +204,7 @@ install(DIRECTORY include/${PROJECT_NAME}/
   FILES_MATCHING PATTERN "*.h"
   PATTERN ".svn" EXCLUDE
 )
+
 
 ## Mark other files for installation (e.g. launch and bag files, etc.)
 # install(FILES
