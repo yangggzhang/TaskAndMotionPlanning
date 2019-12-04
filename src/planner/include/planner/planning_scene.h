@@ -16,6 +16,8 @@ class PlanningScene {
   static std::shared_ptr<PlanningScene> MakeSharedFromRosParam(
       const ros::NodeHandle &ph);
 
+  bool ValidateScene(const std::vector<std::string> &scene_objects);
+
   bool GetPlanningScene(const std::vector<std::string> &scene_objects,
                         moveit_msgs::PlanningScene &scene_msgs);
 
