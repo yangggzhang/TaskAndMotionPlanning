@@ -10,7 +10,7 @@ bool MotionPlannerParams::LoadFromRosParams(const ros::NodeHandle& ph) {
     return false;
   }
 
-  if (!ph.getParam("world_frame", move_group)) {
+  if (!ph.getParam("world_frame", world_frame)) {
     ROS_ERROR_STREAM("Missing world frame!");
     return false;
   }
@@ -41,39 +41,56 @@ bool MotionPlannerParams::LoadFromRosParams(const ros::NodeHandle& ph) {
   for (int32_t i = 0; i < grasps_param_list.size(); ++i) {
     XmlRpc::XmlRpcValue grasp_param = grasps_param_list[i];
     MoveItGrasp grasp_candidate;
-    if (!utils::GetParam(grasp_param, "pose_orientation",
-                         grasp_candidate.pose_orientation)) {
+
+    std::vector<double> pose_orientation;
+    if (!utils::GetParam(grasp_param, "pose_orientation", pose_orientation)) {
       return false;
     } else {
-      if (grasp_candidate.pose_orientation.size() != 3) {
+      if (pose_orientation.size() != 3) {
         return false;
       }
     }
 
-    if (!utils::GetParam(grasp_param, "pose_position",
-                         grasp_candidate.pose_position)) {
+    std::vector<double> pose_position;
+    if (!utils::GetParam(grasp_param, "pose_position", pose_position)) {
       return false;
     } else {
-      if (grasp_candidate.pose_position.size() != 3) {
+      if (pose_position.size() != 3) {
         return false;
       }
     }
 
+    tf2::Quaternion grasp_pose_quaternion;
+    grasp_pose_quaternion.setRPY(pose_orientation[0], pose_orientation[1],
+                                 pose_orientation[2]);
+    tf2::Vector3 grasp_pose_origin(pose_position[0], pose_position[1],
+                                   pose_position[2]);
+    grasp_candidate.grasp_pose =
+        tf2::Transform(grasp_pose_quaternion, grasp_pose_origin);
+    std::vector<double> approach_direction;
     if (!utils::GetParam(grasp_param, "approach_direction",
-                         grasp_candidate.approach_direction)) {
+                         approach_direction)) {
       return false;
     } else {
-      if (grasp_candidate.approach_direction.size() != 3) {
+      if (approach_direction.size() != 3) {
         return false;
+      } else {
+        grasp_candidate.approach_direction.x = approach_direction[0];
+        grasp_candidate.approach_direction.y = approach_direction[1];
+        grasp_candidate.approach_direction.z = approach_direction[2];
       }
     }
 
-    if (!utils::GetParam(grasp_param, "retreat_direction",
-                         grasp_candidate.retreat_direction)) {
+    std::vector<double> retreat_direction;
+    if (!utils::GetParam(grasp_param, "retreat_direction", retreat_direction)) {
       return false;
     } else {
-      if (grasp_candidate.retreat_direction.size() != 3) {
+      if (retreat_direction.size() != 3) {
         return false;
+      } else {
+        grasp_candidate.retreat_direction.x = retreat_direction[0];
+        grasp_candidate.retreat_direction.y = retreat_direction[1];
+        grasp_candidate.retreat_direction.z = retreat_direction[2];
       }
     }
 

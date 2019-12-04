@@ -4,6 +4,7 @@
 #include <moveit/planning_scene_interface/planning_scene_interface.h>
 #include <moveit_msgs/PickupAction.h>
 #include <ros/ros.h>
+#include <boost/optional.hpp>
 #include <string>
 #include <vector>
 
@@ -22,9 +23,12 @@ class MotionPlanner {
       const ros::NodeHandle& ph,
       std::shared_ptr<scene::PlanningScene> planning_scene_interface);
 
+  // Return True 1. plan_result nullptr -> not available plan
+  //             2. plan_result != nullptr available plan
   bool PlanPick(const std::vector<std::string>& scene_objects,
                 const std::string& pickup_object,
-                const std::string& pickup_object_from);
+                const std::string& pickup_object_from,
+                moveit_msgs::PickupResultConstPtr plan_result);
 
  private:
   MotionPlanner(std::shared_ptr<scene::PlanningScene> planning_scene_interface,

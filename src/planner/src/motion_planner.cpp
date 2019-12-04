@@ -38,13 +38,66 @@ bool MotionPlanner::ConstructGrasp(
   grasp_candidates.resize(params_.grasps.size());
   for (size_t i = 0; i < params_.grasps.size(); ++i) {
     grasp_candidates[i].grasp_pose.header.frame_id = params_.world_frame;
-    tf2::Quaternion rotation;
-    rotation.setRPY(params_.grasps[i].pose_orientation[0],
-                    params_.grasps[i].pose_orientation[1],
-                    params_.grasps[i].pose_orientation[2]);
-    tf2::Quaternion object_tf_orientation;
-    tf2::convert(object_to_pickup.primitive_poses[0].orientation,
-                 object_tf_orientation);
+
+    tf2::Quaternion object_orientation;
+    tf2::convert(object_orientation,
+                 object_to_pickup.primitive_poses[0].orientation);
+    tf2::Vector3 object_position;
+    tf2::fromMsg(object_to_pickup.primitive_poses[0].position, object_position);
+    tf2::Transform object_transform(object_orientation, object_position);
+    tf2::Transform tf2_grasp_pose =
+        object_transform * params_.grasps[i].grasp_pose;
+    grasp_candidates[i].grasp_pose.pose.orientation =
+        tf2::toMsg(tf2_grasp_pose.getRotation());
+    tf2::toMsg(tf2_grasp_pose.getOrigin(),
+               grasp_candidates[i].grasp_pose.pose.position);
+
+    grasp_candidates[i].pre_grasp_approach.direction.header.frame_id =
+        params_.world_frame;
+    grasp_candidates[i].pre_grasp_approach.direction.vector =
+        params_.grasps[i].approach_direction;
+    grasp_candidates[i].pre_grasp_approach.min_distance =
+        params_.grasps[i].approach_min_distance;
+    grasp_candidates[i].pre_grasp_approach.desired_distance =
+        params_.grasps[i].approach_desired_distance;
+
+    const size_t num_gripper_joints =
+        params_.grasps[i].gripper_joint_names.size();
+    grasp_candidates[i].pre_grasp_posture.joint_names.resize(
+        num_gripper_joints);
+    grasp_candidates[i].pre_grasp_posture.points.resize(1);
+    grasp_candidates[i].pre_grasp_posture.points[0].positions.resize(
+        num_gripper_joints);
+    for (size_t j = 0; j < num_gripper_joints; ++j) {
+      grasp_candidates[i].pre_grasp_posture.joint_names[j] =
+          params_.grasps[i].gripper_joint_names[j];
+      grasp_candidates[i].pre_grasp_posture.points[0].positions[j] =
+          params_.grasps[i].gripper_open_joint_positions[j];
+    }
+    grasp_candidates[i].pre_grasp_posture.points[0].time_from_start =
+        ros::Duration(params_.grasps[i].gripper_time_from_start);
+
+    grasp_candidates[i].post_grasp_retreat.direction.header.frame_id =
+        params_.world_frame;
+    grasp_candidates[i].post_grasp_retreat.direction.vector =
+        params_.grasps[i].retreat_direction;
+    grasp_candidates[i].post_grasp_retreat.min_distance =
+        params_.grasps[i].retreat_min_distance;
+    grasp_candidates[i].post_grasp_retreat.desired_distance =
+        params_.grasps[i].retreat_desired_distance;
+
+    grasp_candidates[i].grasp_posture.joint_names.resize(num_gripper_joints);
+    grasp_candidates[i].grasp_posture.points.resize(1);
+    grasp_candidates[i].grasp_posture.points[0].positions.resize(
+        num_gripper_joints);
+    for (size_t j = 0; j < num_gripper_joints; ++j) {
+      grasp_candidates[i].grasp_posture.joint_names[j] =
+          params_.grasps[i].gripper_joint_names[j];
+      grasp_candidates[i].grasp_posture.points[0].positions[j] =
+          params_.grasps[i].gripper_closed_joint_positions[j];
+    }
+    grasp_candidates[i].grasp_posture.points[0].time_from_start =
+        ros::Duration(params_.grasps[i].gripper_time_from_start);
   }
   return true;
 }
@@ -64,7 +117,12 @@ bool MotionPlanner::ConstructPickupGoal(
   goal.group_name = params_.move_group;
   goal.support_surface_name = pickup_object_from;
 
-  /// plan grasp
+  std::vector<moveit_msgs::Grasp> grasp_candidates;
+  if (!ConstructGrasp(pickup_object, grasp_candidates)) {
+    ROS_ERROR_STREAM("Can not construct grasp poses for : " << pickup_object);
+    return false;
+  }
+  goal.possible_grasps = grasp_candidates;
   goal.allow_gripper_support_collision = true;
   goal.planning_options.planning_scene_diff = pickup_scene;
   goal.planning_options.replan = true;
@@ -76,7 +134,8 @@ bool MotionPlanner::ConstructPickupGoal(
 
 bool MotionPlanner::PlanPick(const std::vector<std::string>& scene_objects,
                              const std::string& pickup_object,
-                             const std::string& pickup_object_from) {
+                             const std::string& pickup_object_from,
+                             moveit_msgs::PickupResultConstPtr plan_result) {
   if (!pickup_planner_->isServerConnected()) {
     ROS_ERROR("Pick up server is not connected!");
     return false;
@@ -95,9 +154,10 @@ bool MotionPlanner::PlanPick(const std::vector<std::string>& scene_objects,
   if (state != actionlib::SimpleClientGoalState::SUCCEEDED) {
     ROS_INFO_STREAM("Pick up planning failed for : " << pickup_object << " on "
                                                      << pickup_object_from);
-    return false;
+    plan_result = nullptr;
+    return true;
   }
-  moveit_msgs::PickupResultConstPtr result_ptr = pickup_planner_->getResult();
+  plan_result = pickup_planner_->getResult();
   return true;
 }
 

@@ -1,6 +1,8 @@
 #pragma once
 
+#include <geometry_msgs/Vector3.h>
 #include <ros/ros.h>
+#include <tf2/LinearMath/Transform.h>
 #include <string>
 #include <vector>
 
@@ -8,10 +10,9 @@ namespace tamp {
 namespace planner {
 
 struct MoveItGrasp {
-  std::vector<double> pose_orientation;
-  std::vector<double> pose_position;
-  std::vector<double> approach_direction;
-  std::vector<double> retreat_direction;
+  tf2::Transform grasp_pose;
+  geometry_msgs::Vector3 approach_direction;
+  geometry_msgs::Vector3 retreat_direction;
   double approach_min_distance;
   double approach_desired_distance;
   double retreat_min_distance;
