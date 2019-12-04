@@ -12,9 +12,9 @@ class TaskAndMotionPlanner {
   static std::unique_ptr<TaskAndMotionPlanner> Make(const ros::NodeHandle& ph);
 
  private:
-  TaskAndMotionPlanner(std::unique_ptr<scene::PlanningScene> planning_scene);
+  TaskAndMotionPlanner(std::shared_ptr<scene::PlanningScene> planning_scene);
 
-  std::unique_ptr<scene::PlanningScene> planning_scene_;
+  std::shared_ptr<scene::PlanningScene> planning_scene_;
 };
 }  // namespace planner
 }  // namespace tamp
