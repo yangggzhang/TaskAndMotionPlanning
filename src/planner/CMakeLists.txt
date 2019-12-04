@@ -15,6 +15,7 @@ find_package(catkin REQUIRED COMPONENTS
   moveit_ros_planning
   moveit_ros_planning_interface
   moveit_ros_perception
+  moveit_msgs
   pluginlib
   geometric_shapes
   pcl_ros
@@ -24,6 +25,7 @@ find_package(catkin REQUIRED COMPONENTS
   tf2_eigen
   tf2_geometry_msgs
   moveit_ros_manipulation
+  actionlib
 )
 
 ## System dependencies are found with CMake's conventions
@@ -140,7 +142,8 @@ add_library(${PROJECT_NAME}
   src/planning_scene.cpp
   src/planning_scene_param.cpp
   src/task_motion_planner.cpp
-  # src/motion_planner.cpp
+  src/motion_planner.cpp
+  src/motion_planner_params.cpp
   src/task_planner.cpp
 )
 

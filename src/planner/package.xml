@@ -66,6 +66,8 @@
   <depend>tf2_geometry_msgs</depend>
   <depend>eigen</depend>
   <depend>moveit_ros_manipulation</depend>
+  <depend>moveit_msgs</depend>
+  <depend>actionlib</depend>
 
 
   <!-- The export tag contains other, unspecified, tags -->
