@@ -145,6 +145,7 @@ add_library(${PROJECT_NAME}
   src/motion_planner.cpp
   src/motion_planner_params.cpp
   src/task_planner.cpp
+  src/trajectory_feedback.cpp
 )
 
 
