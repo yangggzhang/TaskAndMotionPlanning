@@ -1,8 +1,13 @@
 #pragma once
 
 #include <actionlib/client/simple_action_client.h>
+#include <moveit/planning_scene_interface/planning_scene_interface.h>
 #include <moveit_msgs/PickupAction.h>
 #include <ros/ros.h>
+#include <string>
+#include <vector>
+
+#include "motion_planner_params.h"
 #include "planning_scene.h"
 
 namespace tamp {
@@ -13,15 +18,34 @@ class MotionPlanner {
  public:
   MotionPlanner() = delete;
 
-  static std::unique_ptr<MotionPlanner> MakeFromRosParam(
-      const ros::NodeHandle &ph);
+  static std::unique_ptr<MotionPlanner> MakeSharedFromRosParam(
+      const ros::NodeHandle& ph,
+      std::shared_ptr<scene::PlanningScene> planning_scene_interface);
+
+  bool PlanPick(const std::vector<std::string>& scene_objects,
+                const std::string& pickup_object,
+                const std::string& pickup_object_from);
 
  private:
-  MotionPlanner(const ros::NodeHandle &ph);
+  MotionPlanner(std::shared_ptr<scene::PlanningScene> planning_scene_interface,
+                std::unique_ptr<PickupPlanner> planner,
+                const MotionPlannerParams& params);
 
-  std::shared_ptr<scene::PlanningScene> planning_scene_;
+  bool ConstructPickupGoal(const std::vector<std::string>& scene_objects,
+                           const std::string& pickup_object,
+                           const std::string& pickup_object_from,
+                           moveit_msgs::PickupGoal& goal);
+
+  bool ConstructGrasp(const std::string& pickup_object,
+                      std::vector<moveit_msgs::Grasp>& grasp_candidates);
+
+  bool ResetScene(const std::vector<std::string>& scene_objects);
+
+  std::shared_ptr<scene::PlanningScene> planning_scene_interface_;
 
   std::unique_ptr<PickupPlanner> pickup_planner_;
+
+  MotionPlannerParams params_;
 };
 }  // namespace planner
 }  // namespace tamp

@@ -1,8 +1,10 @@
 #pragma once
 
 #include <moveit/planning_scene_interface/planning_scene_interface.h>
+#include <moveit_msgs/PlanningScene.h>
 #include <ros/ros.h>
 #include <unordered_map>
+
 #include "planner/planning_scene_param.h"
 
 namespace tamp {
@@ -13,6 +15,14 @@ class PlanningScene {
 
   static std::shared_ptr<PlanningScene> MakeSharedFromRosParam(
       const ros::NodeHandle &ph);
+
+  bool GetPlanningScene(const std::vector<std::string> &scene_objects,
+                        moveit_msgs::PlanningScene &scene_msgs);
+
+  bool GetObject(const std::string &object,
+                 moveit_msgs::CollisionObject &object_info);
+
+  bool RemoveObject(const std::string &object);
 
   bool reset();
 
