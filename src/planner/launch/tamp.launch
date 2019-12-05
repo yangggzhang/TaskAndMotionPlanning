@@ -1,6 +1,7 @@
 <launch>
   <node pkg="planner" type="TAMP_node" name="TAMP_node" output="screen"> 
     <rosparam command="load" file="$(find planner)/config/CollisionObjects.yaml" />
+    <rosparam param="description_file" default="$(find planner)/config/clutter.txt" />
   </node>
 </launch>
 

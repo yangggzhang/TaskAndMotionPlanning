@@ -37,6 +37,18 @@ bool PlanningScene::GetObject(const std::string &object,
     object_info = collision_object_table_[object];
 }
 
+bool PlanningScene::ValidateScene(
+    const std::vector<std::string> &scene_objects) {
+  for (const std::string &object : scene_objects) {
+    if (collision_object_table_.find(object) == collision_object_table_.end()) {
+      ROS_ERROR_STREAM(
+          "Object : " << object << " does not exist in the planning scene !");
+      return false;
+    }
+  }
+  return true;
+}
+
 bool PlanningScene::GetPlanningScene(
     const std::vector<std::string> &scene_objects,
     moveit_msgs::PlanningScene &scene_msgs) {
@@ -66,6 +78,15 @@ bool PlanningScene::RemoveObject(const std::string &object) {
     return true;
   }
   return true;
+}
+
+std::vector<std::string> PlanningScene::getCollisionObjects() {
+  std::vector<std::string> key_set;
+  for (const auto& k : collision_object_table_)
+  {
+    key_set.push_back(k.first);
+  }
+  return std::move(key_set);
 }
 
 bool PlanningScene::reset() {
