@@ -80,8 +80,8 @@ bool PlanningScene::RemoveObject(const std::string &object) {
   return true;
 }
 
-std::vector<string> PlanningScene::getCollisionObjects() {
-  std::vector<string> key_set;
+std::vector<std::string> PlanningScene::getCollisionObjects() {
+  std::vector<std::string> key_set;
   for (const auto& k : collision_object_table_)
   {
     key_set.push_back(k.first);

@@ -12,7 +12,7 @@ MotionPlanner::MotionPlanner(
       pickup_planner_(std::move(planner)),
       params_(params) {}
 
-std::unique_ptr<MotionPlanner> MotionPlanner::MakeSharedFromRosParam(
+std::unique_ptr<MotionPlanner> MotionPlanner::MakeUniqueFromRosParam(
     const ros::NodeHandle& ph,
     std::shared_ptr<scene::PlanningScene> planning_scene_interface) {
   MotionPlannerParams param;
