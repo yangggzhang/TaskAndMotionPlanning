@@ -1,5 +1,6 @@
 #pragma once
 #include "task_planner_util.h"
+#include "task_motion_planner.h"
 #include <ros/ros.h>
 
 
@@ -13,7 +14,20 @@ class TaskPlanner {
   static std::unique_ptr<TaskPlanner> MakeFromRosParam(const ros::NodeHandle &ph);
 
  private:
+  Env* env;
   TaskPlanner(const std::string& description_file);
+  std::vector<GroundedAction> run(Heuristic heuristicOption=NoHeuristic);
+  std::vector<GroundedAction> aStar(const GroundedConditionSet& startConditionSet,
+	                                const GroundedConditionSet& goalConditionSet,
+	                                const list<GroundedAction>& allPossibleActions,
+	                                const Heuristic& heuristicOption,
+	                                const bool& deletion = true,
+	                                const bool& print = false);
+  int getHeuristic(const Heuristic& heuristicOption, 
+  	               const GroundedConditionSet& goalSet, 
+        				   const GroundedConditionSet& currentSet,
+                   const list<GroundedAction>& allPossibleActions);
+  TmpOutput interface(std::vector<GroundedAction> actions);
 };
 }  // namespace planner
 }  // namespace tamp
