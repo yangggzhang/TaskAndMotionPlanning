@@ -9,7 +9,12 @@ std::unique_ptr<TaskPlanner> TaskPlanner::MakeFromRosParam(const ros::NodeHandle
         ROS_ERROR_STREAM("Missing description file path!");
         return nullptr;
     }
-    return std::unique_ptr<TaskPlanner>(new TaskPlanner(df));
+    std::unique_ptr<TaskAndMotionPlanner> task_and_motion_planner = TaskAndMotionPlanner::Make(ph);
+    if (task_and_motion_planner == nullptr) {
+        ROS_ERROR_STREAM("Failed to make TaskAndMotionPlanner!");
+        return nullptr;
+    }
+    return std::unique_ptr<TaskPlanner>(new TaskPlanner(df, std::move(task_and_motion_planner)));
 }
 
 TmpOutput TaskPlanner::interface(std::vector<GroundedAction> actions)
@@ -38,7 +43,7 @@ TmpOutput TaskPlanner::interface(std::vector<GroundedAction> actions)
     return test;
 }
 
-TaskPlanner::TaskPlanner(const std::string& description_file_path){
+TaskPlanner::TaskPlanner(const std::string& description_file_path, std::unique_ptr<TaskAndMotionPlanner> task_and_motion_planner) : task_and_motion_planner_(std::move(task_and_motion_planner)) {
 	env = create_env(const_cast<char*>(description_file_path.c_str()));
 }
 std::vector<GroundedAction> TaskPlanner::run(Heuristic heuristicOption)

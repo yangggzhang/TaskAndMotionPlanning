@@ -15,7 +15,7 @@ class TaskPlanner {
 
  private:
   Env* env;
-  TaskPlanner(const std::string& description_file);
+  TaskPlanner(const std::string& description_file, std::unique_ptr<TaskAndMotionPlanner> task_and_motion_planner);
   std::vector<GroundedAction> run(Heuristic heuristicOption=NoHeuristic);
   std::vector<GroundedAction> aStar(const GroundedConditionSet& startConditionSet,
 	                                const GroundedConditionSet& goalConditionSet,
@@ -28,6 +28,8 @@ class TaskPlanner {
         				   const GroundedConditionSet& currentSet,
                    const list<GroundedAction>& allPossibleActions);
   TmpOutput interface(std::vector<GroundedAction> actions);
+
+  std::unique_ptr<TaskAndMotionPlanner> task_and_motion_planner_;
 };
 }  // namespace planner
 }  // namespace tamp

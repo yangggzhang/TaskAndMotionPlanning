@@ -247,7 +247,7 @@ Env* create_env(char* filename)
                 const char* line_c = line.c_str();
                 if (regex_match(line_c, actionRegex))
                 {
-                    parser = ACTION_DEFINITION;
+                    parser = TASK_ACTION_DEFINITION;
                 }
                 else
                 {
@@ -255,7 +255,7 @@ Env* create_env(char* filename)
                     throw;
                 }
             }
-            else if (parser == ACTION_DEFINITION)
+            else if (parser == TASK_ACTION_DEFINITION)
             {
                 const char* line_c = line.c_str();
                 if (regex_match(line_c, conditionRegex))
@@ -362,7 +362,7 @@ Env* create_env(char* filename)
 
                     preconditions.clear();
                     effects.clear();
-                    parser = ACTION_DEFINITION;
+                    parser = TASK_ACTION_DEFINITION;
                 }
                 else
                 {

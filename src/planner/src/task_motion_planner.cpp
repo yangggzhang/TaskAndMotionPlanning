@@ -13,15 +13,18 @@ std::unique_ptr<TaskAndMotionPlanner> TaskAndMotionPlanner::Make(
   std::shared_ptr<scene::PlanningScene> planning_scene =
       scene::PlanningScene::MakeSharedFromRosParam(ph);
   if (planning_scene == nullptr) {
+    ROS_ERROR_STREAM("Cannot make planning scene!");
     return nullptr;
   }
   
   std::unique_ptr<MotionPlanner> motion_planner = MotionPlanner::MakeUniqueFromRosParam(ph, planning_scene);
   if (motion_planner == nullptr) {
+    ROS_ERROR_STREAM("Cannot make motion planner!");
     return nullptr;
   }
   std::unique_ptr<feedback::TrajectoryFeedback> trajectory_feedback = feedback::TrajectoryFeedback::MakeFromShared(planning_scene);
   if (trajectory_feedback == nullptr) {
+    ROS_ERROR_STREAM("Cannot make trajectory feedback!");
     return nullptr;
   }
   

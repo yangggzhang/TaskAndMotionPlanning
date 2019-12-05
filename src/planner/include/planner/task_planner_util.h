@@ -16,7 +16,7 @@ namespace planner {
 #define INITIAL 1
 #define GOAL 2
 #define ACTIONS 3
-#define ACTION_DEFINITION 4
+#define TASK_ACTION_DEFINITION 4
 #define ACTION_PRECONDITION 5
 #define ACTION_EFFECT 6
 
