@@ -34,6 +34,7 @@ bool PlanningScene::GetObject(const std::string &object,
     return false;
   } else
     object_info = collision_object_table_[object];
+  return true;
 }
 
 bool PlanningScene::ValidateScene(
@@ -79,14 +80,13 @@ bool PlanningScene::RemoveObject(const std::string &object) {
   return true;
 }
 
-std::vector<string> PlanningScene::getCollisionObjects() {
-  std::vector<string> key_set;
-  for (const auto& k : collision_object_table_)
-  {
-    key_set.push_back(k.first);
-  }
-  return std::move(key_set);
-}
+// std::vector<string> PlanningScene::getCollisionObjects() {
+//   std::vector<string> key_set;
+//   for (const auto &k : collision_object_table_) {
+//     key_set.push_back(k.first);
+//   }
+//   return std::move(key_set);
+// }
 
 bool PlanningScene::reset() {
   scene_.reset(new moveit::planning_interface::PlanningSceneInterface());

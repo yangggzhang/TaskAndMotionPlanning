@@ -28,7 +28,7 @@ class MotionPlanner {
   bool PlanPick(const std::vector<std::string>& scene_objects,
                 const std::string& pickup_object,
                 const std::string& pickup_object_from,
-                moveit_msgs::PickupResultConstPtr plan_result);
+                moveit_msgs::PickupResultConstPtr& plan_result);
 
  private:
   MotionPlanner(std::shared_ptr<scene::PlanningScene> planning_scene_interface,

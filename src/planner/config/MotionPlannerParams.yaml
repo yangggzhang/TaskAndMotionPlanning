@@ -1,0 +1,19 @@
+move_group: "panda_arm"
+world_frame: "panda_link0"
+planner_name: "pickup"
+max_planning_time_sec: 30
+plan_only: true
+num_planning_attempts: 3
+grasps:
+  - pose_orientation: [-1.57079632679, -0.78539816339, -1.57079632679]
+    pose_position: [ -0.085, 0.0, 0.0]
+    approach_direction: [ 1.0, 0.0, 0.0]
+    retreat_direction: [ 0.0, 0.0, 1.0]
+    approach_min_distance: 0.095
+    approach_desired_distance: 0.115
+    retreat_min_distance: 0.1
+    retreat_desired_distance: 0.25
+    gripper_joint_names: ["panda_finger_joint1", "panda_finger_joint2"]
+    gripper_open_joint_positions: [ 0.04, 0.04]
+    gripper_closed_joint_positions: [ 0.00, 0.00]
+    gripper_time_from_start: 0.5

@@ -12,7 +12,7 @@ MotionPlanner::MotionPlanner(
       pickup_planner_(std::move(planner)),
       params_(params) {}
 
-std::unique_ptr<MotionPlanner> MotionPlanner::MakeSharedFromRosParam(
+std::unique_ptr<MotionPlanner> MotionPlanner::MakeUniqueFromRosParam(
     const ros::NodeHandle& ph,
     std::shared_ptr<scene::PlanningScene> planning_scene_interface) {
   MotionPlannerParams param;
@@ -124,6 +124,7 @@ bool MotionPlanner::ConstructPickupGoal(
   }
   goal.possible_grasps = grasp_candidates;
   goal.allow_gripper_support_collision = true;
+  goal.planning_options.plan_only = params_.plan_only;
   goal.planning_options.planning_scene_diff = pickup_scene;
   goal.planning_options.replan = true;
   goal.planning_options.replan_attempts = params_.num_planning_attempts;
@@ -135,7 +136,7 @@ bool MotionPlanner::ConstructPickupGoal(
 bool MotionPlanner::PlanPick(const std::vector<std::string>& scene_objects,
                              const std::string& pickup_object,
                              const std::string& pickup_object_from,
-                             moveit_msgs::PickupResultConstPtr plan_result) {
+                             moveit_msgs::PickupResultConstPtr& plan_result) {
   if (!pickup_planner_->isServerConnected()) {
     ROS_ERROR("Pick up server is not connected!");
     return false;
@@ -154,6 +155,7 @@ bool MotionPlanner::PlanPick(const std::vector<std::string>& scene_objects,
   if (state != actionlib::SimpleClientGoalState::SUCCEEDED) {
     ROS_INFO_STREAM("Pick up planning failed for : " << pickup_object << " on "
                                                      << pickup_object_from);
+    ROS_INFO_STREAM("Planning finished with state " << state.toString());
     plan_result = nullptr;
     return true;
   }
