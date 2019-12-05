@@ -10,7 +10,13 @@ MotionPlanner::MotionPlanner(
     std::unique_ptr<PickupPlanner> planner, const MotionPlannerParams& params)
     : planning_scene_interface_(std::move(planning_scene_interface)),
       pickup_planner_(std::move(planner)),
-      params_(params) {}
+      params_(params) {
+  if (!pickup_planner_->isServerConnected()) {
+    ROS_ERROR("Pick up server is not connected!");
+  } else {
+    ROS_INFO("Pick up server connected!");
+  }
+}
 
 std::unique_ptr<MotionPlanner> MotionPlanner::MakeUniqueFromRosParam(
     const ros::NodeHandle& ph,
@@ -20,9 +26,14 @@ std::unique_ptr<MotionPlanner> MotionPlanner::MakeUniqueFromRosParam(
     ROS_ERROR("Failed to load motion planner parameters!");
     return nullptr;
   }
+  //   ROS_INFO_STREAM("Planner name: " << param.planner_name);
   std::unique_ptr<PickupPlanner> pickup_planner =
       std::unique_ptr<PickupPlanner>(
           new PickupPlanner(param.planner_name, true));
+  if (!pickup_planner->isServerConnected()) {
+    ROS_ERROR("Pick up server is not connected!");
+    return false;
+  }
   return std::unique_ptr<MotionPlanner>(new MotionPlanner(
       std::move(planning_scene_interface), std::move(pickup_planner), param));
 }

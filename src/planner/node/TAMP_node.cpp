@@ -10,7 +10,6 @@ int main(int argc, char **argv) {
     return -1;
   }
   int magic = 0;
-  ROS_ERROR("0000");
   task_planner->run();
   ros::spin();
   return 0;

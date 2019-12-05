@@ -46,7 +46,9 @@ TaskPlanner::TaskPlanner(
   env = create_env(const_cast<char*>(description_file_path.c_str()));
 }
 std::vector<GroundedAction> TaskPlanner::run(Heuristic heuristicOption) {
-  ROS_ERROR("1111");
+  if (task_and_motion_planner_ == nullptr) {
+    ROS_ERROR("Fuck!");
+  }
   // this is where you insert your planner
   std::vector<GroundedAction> actions;
   clock_t start_t, end_t;
