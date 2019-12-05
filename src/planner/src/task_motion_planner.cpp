@@ -81,7 +81,7 @@ TmpOutput TaskAndMotionPlanner::interface(
                                 plan_result);
       if (plan_result != nullptr) {
         // use collision checker to find which obj blocks the plan
-        trajectory_feedback_->GetCollisionFeedback(scene_objects, plan_result,
+        trajectory_feedback_->GetCollisionFeedback(scene_objects, args.front(), plan_result,
                                                    output.obstacles);
         output.plan_status = PlannerStatus::REPLAN;
         output.fail_step_index = i;
