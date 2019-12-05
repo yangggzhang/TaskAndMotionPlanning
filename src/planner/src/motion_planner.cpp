@@ -30,9 +30,11 @@ std::unique_ptr<MotionPlanner> MotionPlanner::MakeUniqueFromRosParam(
   std::unique_ptr<PickupPlanner> pickup_planner =
       std::unique_ptr<PickupPlanner>(
           new PickupPlanner(param.planner_name, true));
-  if (!pickup_planner->isServerConnected()) {
-    ROS_ERROR("Pick up server is not connected!");
-    return false;
+  if (!pickup_planner->waitForServer(ros::Duration(30))) {
+    ROS_ERROR("Can not bring up pick up planner!");
+    return nullptr;
+  } else {
+    ROS_INFO_STREAM("Pick up planner is up!");
   }
   return std::unique_ptr<MotionPlanner>(new MotionPlanner(
       std::move(planning_scene_interface), std::move(pickup_planner), param));

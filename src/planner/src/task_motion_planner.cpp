@@ -1,7 +1,11 @@
 #include "planner/task_motion_planner.h"
+#include "planner/mock_planner.h"
 
 namespace tamp {
 namespace planner {
+static int test_cnt = 0;
+static int test_cnt_cc = 0;
+
 TaskAndMotionPlanner::TaskAndMotionPlanner(
     std::shared_ptr<scene::PlanningScene> planning_scene,
     std::unique_ptr<MotionPlanner> motion_planner,
@@ -67,29 +71,30 @@ TmpOutput TaskAndMotionPlanner::interface(
       ROS_ERROR_STREAM("Argument is empty in GroundedAction" +
                        action.toString());
     }
-    ROS_INFO("222222");
     motion_planner_->PlanPick(scene_objects, args.front(), "Table",
                               plan_result);
-    ROS_INFO("333333");
+
+    // MockPlanner::PlanPick(scene_objects, args.front(), "Table", plan_result,
+    //                       test_cnt++);
     if (plan_result != nullptr) {
       // TODO: execute interface
       // execute(plan_result);
-      ROS_INFO("44444");
       continue;
     } else {
       // plan with partial scene
-      ROS_INFO("55555");
       std::vector<std::string> partial_scene_objects =
           generate_partial_scene(actions, i);
-      ROS_INFO("66666");
       motion_planner_->PlanPick(partial_scene_objects, args.front(), "Table",
                                 plan_result);
+      // MockPlanner::PlanPick(partial_scene_objects, args.front(), "Table",
+      //                       plan_result, test_cnt++);
       if (plan_result != nullptr) {
         // use collision checker to find which obj blocks the plan
-        ROS_INFO("77777");
         trajectory_feedback_->GetCollisionFeedback(
             scene_objects, args.front(), plan_result, output.obstacles);
-        ROS_INFO("88888");
+
+        // MockPlanner::GetCollisionFeedback(scene_objects, plan_result,
+        //                                   output.obstacles, test_cnt_cc++);
         output.plan_status = PlannerStatus::REPLAN;
         output.fail_step_index = i;
         return output;
