@@ -151,8 +151,8 @@ add_library(${PROJECT_NAME}
 )
 
 
-# add_executable(TAMP_node node/TAMP_node.cpp)
-# target_link_libraries(TAMP_node ${PROJECT_NAME} ${catkin_LIBRARIES} )
+add_executable(TAMP_node node/TAMP_node.cpp)
+target_link_libraries(TAMP_node ${PROJECT_NAME} ${catkin_LIBRARIES} )
 
 add_executable(test_node node/test_node.cpp)
 target_link_libraries(test_node ${PROJECT_NAME} ${catkin_LIBRARIES} )

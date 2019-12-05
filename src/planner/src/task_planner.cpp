@@ -46,6 +46,7 @@ TaskPlanner::TaskPlanner(
   env = create_env(const_cast<char*>(description_file_path.c_str()));
 }
 std::vector<GroundedAction> TaskPlanner::run(Heuristic heuristicOption) {
+  ROS_ERROR("1111");
   // this is where you insert your planner
   std::vector<GroundedAction> actions;
   clock_t start_t, end_t;
@@ -67,7 +68,8 @@ std::vector<GroundedAction> TaskPlanner::run(Heuristic heuristicOption) {
   if (actions.empty()) {
     task_motion_output.plan_status = PlannerStatus::FAILED;
   } else {
-    task_motion_output = interface(actions);  // SUCCESS, FAILED, BLOCKED
+    task_motion_output = task_and_motion_planner_->interface(
+        actions);  // SUCCESS, FAILED, BLOCKED
   }
 
   while (task_motion_output.plan_status == PlannerStatus::REPLAN) {
@@ -96,7 +98,7 @@ std::vector<GroundedAction> TaskPlanner::run(Heuristic heuristicOption) {
       task_motion_output.plan_status = PlannerStatus::FAILED;
       break;
     }
-    task_motion_output = interface(actions);
+    task_motion_output = task_and_motion_planner_->interface(actions);
     std::cout << "\nPlan: " << std::endl;
     for (GroundedAction gac : actions) {
       cout << gac << endl;

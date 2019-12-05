@@ -9,6 +9,9 @@ int main(int argc, char **argv) {
     ROS_ERROR("Can not make task and motion planner");
     return -1;
   }
+  int magic = 0;
+  ROS_ERROR("0000");
+  task_planner->run();
   ros::spin();
   return 0;
 }
