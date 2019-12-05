@@ -19,7 +19,7 @@ class MotionPlanner {
  public:
   MotionPlanner() = delete;
 
-  static std::unique_ptr<MotionPlanner> MakeSharedFromRosParam(
+  static std::unique_ptr<MotionPlanner> MakeUniqueFromRosParam(
       const ros::NodeHandle& ph,
       std::shared_ptr<scene::PlanningScene> planning_scene_interface);
 
