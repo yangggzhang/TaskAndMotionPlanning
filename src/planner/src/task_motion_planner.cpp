@@ -6,7 +6,9 @@ TaskAndMotionPlanner::TaskAndMotionPlanner(
     std::shared_ptr<scene::PlanningScene> planning_scene,
     std::unique_ptr<MotionPlanner> motion_planner,
     std::unique_ptr<feedback::TrajectoryFeedback> trajectory_feedback)
-    : planning_scene_(std::move(planning_scene)), motion_planner_(std::move(motion_planner)), trajectory_feedback_(std::move(trajectory_feedback)) {}
+    : planning_scene_(std::move(planning_scene)),
+      motion_planner_(std::move(motion_planner)),
+      trajectory_feedback_(std::move(trajectory_feedback)) {}
 
 std::unique_ptr<TaskAndMotionPlanner> TaskAndMotionPlanner::Make(
     const ros::NodeHandle& ph) {
@@ -16,66 +18,75 @@ std::unique_ptr<TaskAndMotionPlanner> TaskAndMotionPlanner::Make(
     ROS_ERROR_STREAM("Cannot make planning scene!");
     return nullptr;
   }
-  
-  std::unique_ptr<MotionPlanner> motion_planner = MotionPlanner::MakeUniqueFromRosParam(ph, planning_scene);
+
+  std::unique_ptr<MotionPlanner> motion_planner =
+      MotionPlanner::MakeUniqueFromRosParam(ph, planning_scene);
   if (motion_planner == nullptr) {
     ROS_ERROR_STREAM("Cannot make motion planner!");
     return nullptr;
   }
-  std::unique_ptr<feedback::TrajectoryFeedback> trajectory_feedback = feedback::TrajectoryFeedback::MakeFromShared(planning_scene);
+  std::unique_ptr<feedback::TrajectoryFeedback> trajectory_feedback =
+      feedback::TrajectoryFeedback::MakeFromShared(planning_scene);
   if (trajectory_feedback == nullptr) {
     ROS_ERROR_STREAM("Cannot make trajectory feedback!");
     return nullptr;
   }
-  
-  return std::unique_ptr<TaskAndMotionPlanner>(
-      new TaskAndMotionPlanner(std::move(planning_scene), std::move(motion_planner), std::move(trajectory_feedback)));
+
+  return std::unique_ptr<TaskAndMotionPlanner>(new TaskAndMotionPlanner(
+      std::move(planning_scene), std::move(motion_planner),
+      std::move(trajectory_feedback)));
 }
-  
-std::vector<std::string> generate_partial_scene(const std::vector<GroundedAction>& actions, int index) {
+
+std::vector<std::string> generate_partial_scene(
+    const std::vector<GroundedAction>& actions, int index) {
   std::vector<std::string> res = {"Table"};
   int size = actions.size();
-  for(int i=index; i<size; ++i) {
+  for (int i = index; i < size; ++i) {
     const auto& args = actions[i].get_arg_values();
     if (!args.empty()) {
       res.push_back(args.front());
-    }
-    else {
-      ROS_ERROR_STREAM("Argument is empty in GroundedAction" + actions[i].toString());
+    } else {
+      ROS_ERROR_STREAM("Argument is empty in GroundedAction" +
+                       actions[i].toString());
     }
   }
   return res;
 }
-  
-TmpOutput TaskAndMotionPlanner::interface(const std::vector<GroundedAction>& actions) {
+
+TmpOutput TaskAndMotionPlanner::interface(
+    const std::vector<GroundedAction>& actions) {
   TmpOutput output;
   int size = actions.size();
-  for (int i=0; i<size; ++i) {
+  for (int i = 0; i < size; ++i) {
     auto& action = actions[i];
-    std::vector<std::string> scene_objects = planning_scene_->getCollisionObjects();
+    std::vector<std::string> scene_objects =
+        planning_scene_->getCollisionObjects();
     moveit_msgs::PickupResultConstPtr plan_result;
     const auto& args = action.get_arg_values();
     if (args.empty()) {
-      ROS_ERROR_STREAM("Argument is empty in GroundedAction" + action.toString());
+      ROS_ERROR_STREAM("Argument is empty in GroundedAction" +
+                       action.toString());
     }
-    motion_planner_->PlanPick(scene_objects, args.front(), "Table", plan_result);
-    if(plan_result != nullptr) {
-      //TODO: execute interface
+    motion_planner_->PlanPick(scene_objects, args.front(), "Table",
+                              plan_result);
+    if (plan_result != nullptr) {
+      // TODO: execute interface
       // execute(plan_result);
       continue;
-    }
-    else  {
-      //plan with partial scene
-      std::vector<std::string> partial_scene_objects = generate_partial_scene(actions, i);
-      motion_planner_->PlanPick(partial_scene_objects, args.front(), "Table", plan_result);
+    } else {
+      // plan with partial scene
+      std::vector<std::string> partial_scene_objects =
+          generate_partial_scene(actions, i);
+      motion_planner_->PlanPick(partial_scene_objects, args.front(), "Table",
+                                plan_result);
       if (plan_result != nullptr) {
-        //use collision checker to find which obj blocks the plan
-        trajectory_feedback_->GetCollisionFeedback(scene_objects, plan_result, output.obstacles);
+        // use collision checker to find which obj blocks the plan
+        trajectory_feedback_->GetCollisionFeedback(scene_objects, plan_result,
+                                                   output.obstacles);
         output.plan_status = PlannerStatus::REPLAN;
         output.fail_step_index = i;
         return output;
-      }
-      else {
+      } else {
         output.plan_status = PlannerStatus::FAILED;
         return output;
       }
@@ -84,6 +95,6 @@ TmpOutput TaskAndMotionPlanner::interface(const std::vector<GroundedAction>& act
   output.plan_status = PlannerStatus::SUCCESS;
   return output;
 }
-  
+
 }  // namespace planner
 }  // namespace tamp

@@ -1,20 +1,20 @@
 #pragma once
 
 #include <ros/ros.h>
-#include "task_planner_util.h"
-#include "planner/planning_scene.h"
-#include "planner/task_planner.h"
 #include "planner/motion_planner.h"
+#include "planner/planning_scene.h"
 #include "planner/trajectory_feedback.h"
+#include "task_planner_util.h"
 
 namespace tamp {
 namespace planner {
 enum class PlannerStatus { SUCCESS, FAILED, REPLAN };
 
 struct TmpOutput {
-    PlannerStatus plan_status;          //Enum of planning status
-    int fail_step_index;                //i means actions[i] failed
-    std::vector<std::string> obstacles; //<"C2", "C4"> obstacles that caused failure
+  PlannerStatus plan_status;  // Enum of planning status
+  int fail_step_index;        // i means actions[i] failed
+  std::vector<std::string>
+      obstacles;  //<"C2", "C4"> obstacles that caused failure
 };
 
 class TaskAndMotionPlanner {
