@@ -142,6 +142,7 @@ add_library(${PROJECT_NAME}
   src/planning_scene.cpp
   src/planning_scene_param.cpp
   src/task_motion_planner.cpp
+  src/mock_planner.cpp
   src/motion_planner.cpp
   src/motion_planner_params.cpp
   src/task_planner.cpp
