@@ -11,8 +11,8 @@ std::shared_ptr<PlanningScene> PlanningScene::MakeSharedFromRosParam(
     ROS_ERROR(
         "Failed to load collision objects information for planning scene!");
     return nullptr;
-  }
-  return std::shared_ptr<PlanningScene>(new PlanningScene(param));
+  } else
+    return std::shared_ptr<PlanningScene>(new PlanningScene(param));
 }
 
 PlanningScene::PlanningScene(const PlanningSceneParam &param)
@@ -34,6 +34,7 @@ bool PlanningScene::GetObject(const std::string &object,
     return false;
   } else
     object_info = collision_object_table_[object];
+  return true;
 }
 
 bool PlanningScene::ValidateScene(

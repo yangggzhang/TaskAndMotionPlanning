@@ -141,7 +141,7 @@ include_directories(
 add_library(${PROJECT_NAME}
   src/planning_scene.cpp
   src/planning_scene_param.cpp
-  src/task_motion_planner.cpp
+  # src/task_motion_planner.cpp
   src/motion_planner.cpp
   src/motion_planner_params.cpp
   src/task_planner.cpp
@@ -150,8 +150,11 @@ add_library(${PROJECT_NAME}
 )
 
 
-add_executable(TAMP_node node/TAMP_node.cpp)
-target_link_libraries(TAMP_node ${PROJECT_NAME} ${catkin_LIBRARIES} )
+# add_executable(TAMP_node node/TAMP_node.cpp)
+# target_link_libraries(TAMP_node ${PROJECT_NAME} ${catkin_LIBRARIES} )
+
+add_executable(test_node node/test_node.cpp)
+target_link_libraries(test_node ${PROJECT_NAME} ${catkin_LIBRARIES} )
 
 ## Add cmake target dependencies of the library
 ## as an example, code may need to be generated before libraries
