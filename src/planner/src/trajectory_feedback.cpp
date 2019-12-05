@@ -117,7 +117,6 @@ bool TrajectoryFeedback::GetCollisionFeedback(
     ROS_ERROR("The pick up plan does not have 5 stages!");
     return false;
   }
-
   std::vector<double> gripper_open_joints =
       plan_result->trajectory_stages[kOpenStage]
           .joint_trajectory.points.back()
@@ -139,6 +138,20 @@ bool TrajectoryFeedback::GetCollisionFeedback(
   planning_scene::PlanningScenePtr planning_scene(
       new planning_scene::PlanningScene(robot_model));
 
+  for (const std::string& object : scene_objects) {
+    moveit_msgs::CollisionObject moveit_collision_object;
+    if (!planning_scene_interface_->GetObject(object,
+                                              moveit_collision_object)) {
+      ROS_ERROR("Invalid collision object !");
+      return false;
+    } else {
+      if (!planning_scene->processCollisionObjectMsg(moveit_collision_object)) {
+        ROS_ERROR("Can not apply collision object!");
+        return false;
+      }
+    }
+  }
+
   robot_state::RobotState& current_state =
       planning_scene->getCurrentStateNonConst();
 
@@ -146,10 +159,9 @@ bool TrajectoryFeedback::GetCollisionFeedback(
       current_state.getJointModelGroup(kArmGroup);
   const robot_model::JointModelGroup* hand_model_group =
       current_state.getJointModelGroup(kHandGroup);
-
   trajectory_msgs::JointTrajectory traj =
       plan_result->trajectory_stages[4].joint_trajectory;
-  for (size_t i = traj.points.size() - 1; i >= 0; --i) {
+  for (int i = traj.points.size() - 1; i >= 0; --i) {
     std::vector<double> arm_joint_state = traj.points[i].positions;
     if (!GetTrajectoryFeedback(planning_scene, current_state, arm_model_group,
                                arm_joint_state, hand_model_group,
@@ -160,15 +172,16 @@ bool TrajectoryFeedback::GetCollisionFeedback(
     } else {
       if (!collided_objects.empty()) {
         ROS_INFO_STREAM("Found collisions between objects");
-        for (const std::string& obj_in_collision : collided_objects)
+        for (const std::string& obj_in_collision : collided_objects) {
           ROS_INFO_STREAM(obj_in_collision);
+          return true;
+        }
       }
-      return true;
     }
   }
 
   traj = plan_result->trajectory_stages[2].joint_trajectory;
-  for (size_t i = traj.points.size() - 1; i >= 0; --i) {
+  for (int i = traj.points.size() - 1; i >= 0; --i) {
     std::vector<double> arm_joint_state = traj.points[i].positions;
     if (!GetTrajectoryFeedback(planning_scene, current_state, arm_model_group,
                                arm_joint_state, hand_model_group,
@@ -179,15 +192,16 @@ bool TrajectoryFeedback::GetCollisionFeedback(
     } else {
       if (!collided_objects.empty()) {
         ROS_INFO_STREAM("Found collisions between objects");
-        for (const std::string& obj_in_collision : collided_objects)
+        for (const std::string& obj_in_collision : collided_objects) {
           ROS_INFO_STREAM(obj_in_collision);
+          return true;
+        }
       }
-      return true;
     }
   }
 
   traj = plan_result->trajectory_stages[0].joint_trajectory;
-  for (size_t i = traj.points.size() - 1; i >= 0; --i) {
+  for (int i = traj.points.size() - 1; i >= 0; --i) {
     std::vector<double> arm_joint_state = traj.points[i].positions;
     if (!GetTrajectoryFeedback(planning_scene, current_state, arm_model_group,
                                arm_joint_state, hand_model_group,
@@ -198,13 +212,13 @@ bool TrajectoryFeedback::GetCollisionFeedback(
     } else {
       if (!collided_objects.empty()) {
         ROS_INFO_STREAM("Found collisions between objects");
-        for (const std::string& obj_in_collision : collided_objects)
+        for (const std::string& obj_in_collision : collided_objects) {
           ROS_INFO_STREAM(obj_in_collision);
+        }
+        return true;
       }
-      return true;
     }
   }
-
   return true;
 }
 }  // namespace feedback
