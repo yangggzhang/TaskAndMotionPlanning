@@ -1,21 +1,21 @@
 #pragma once
 
 #include <ros/ros.h>
-#include "planner/motion_planner.h"
+#include "task_planner_util.h"
 #include "planner/planning_scene.h"
 #include "planner/task_planner.h"
+#include "planner/motion_planner.h"
 #include "planner/trajectory_feedback.h"
 
 namespace tamp {
 namespace planner {
-// enum class PlannerStatus { SUCCESS, FAILED, REPLAN };
+enum class PlannerStatus { SUCCESS, FAILED, REPLAN };
 
-// struct TmpOutput {
-//     PlannerStatus plan_status;          //Enum of planning status
-//     int fail_step_index;                //i means actions[i] failed
-//     std::vector<std::string> obstacles; //<"C2", "C4"> obstacles that caused
-//     failure
-// };
+struct TmpOutput {
+    PlannerStatus plan_status;          //Enum of planning status
+    int fail_step_index;                //i means actions[i] failed
+    std::vector<std::string> obstacles; //<"C2", "C4"> obstacles that caused failure
+};
 
 class TaskAndMotionPlanner {
  public:
@@ -23,7 +23,7 @@ class TaskAndMotionPlanner {
 
   static std::unique_ptr<TaskAndMotionPlanner> Make(const ros::NodeHandle& ph);
 
-  // TmpOutput interface(const std::vector<GroundedAction>& actions);
+  TmpOutput interface(const std::vector<GroundedAction>& actions);
 
  private:
   TaskAndMotionPlanner(
