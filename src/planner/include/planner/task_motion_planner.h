@@ -1,10 +1,11 @@
 #pragma once
 
 #include <ros/ros.h>
-#include "planner/motion_planner.h"
-#include "planner/planning_scene.h"
-#include "planner/trajectory_feedback.h"
+#include "motion_executor.h"
+#include "motion_planner.h"
+#include "planning_scene.h"
 #include "task_planner_util.h"
+#include "trajectory_feedback.h"
 
 namespace tamp {
 namespace planner {
@@ -29,11 +30,13 @@ class TaskAndMotionPlanner {
   TaskAndMotionPlanner(
       std::shared_ptr<scene::PlanningScene> planning_scene,
       std::unique_ptr<MotionPlanner> motion_planner,
-      std::unique_ptr<feedback::TrajectoryFeedback> trajectory_feedback);
+      std::unique_ptr<feedback::TrajectoryFeedback> trajectory_feedback,
+      std::unique_ptr<executor::MotionExecutor> controller);
 
   std::shared_ptr<scene::PlanningScene> planning_scene_;
   std::unique_ptr<MotionPlanner> motion_planner_;
   std::unique_ptr<feedback::TrajectoryFeedback> trajectory_feedback_;
+  std::unique_ptr<executor::MotionExecutor> controller_;
 };
 
 }  // namespace planner

@@ -10,10 +10,12 @@ static bool delay_flag = 1;
 TaskAndMotionPlanner::TaskAndMotionPlanner(
     std::shared_ptr<scene::PlanningScene> planning_scene,
     std::unique_ptr<MotionPlanner> motion_planner,
-    std::unique_ptr<feedback::TrajectoryFeedback> trajectory_feedback)
+    std::unique_ptr<feedback::TrajectoryFeedback> trajectory_feedback,
+    std::unique_ptr<executor::MotionExecutor> controller)
     : planning_scene_(std::move(planning_scene)),
       motion_planner_(std::move(motion_planner)),
-      trajectory_feedback_(std::move(trajectory_feedback)) {}
+      trajectory_feedback_(std::move(trajectory_feedback)),
+      controller_(std::move(controller)) {}
 
 std::unique_ptr<TaskAndMotionPlanner> TaskAndMotionPlanner::Make(
     ros::NodeHandle& ph) {
@@ -30,6 +32,7 @@ std::unique_ptr<TaskAndMotionPlanner> TaskAndMotionPlanner::Make(
     ROS_ERROR_STREAM("Cannot make motion planner!");
     return nullptr;
   }
+
   std::unique_ptr<feedback::TrajectoryFeedback> trajectory_feedback =
       feedback::TrajectoryFeedback::MakeFromShared(planning_scene);
   if (trajectory_feedback == nullptr) {
@@ -37,9 +40,16 @@ std::unique_ptr<TaskAndMotionPlanner> TaskAndMotionPlanner::Make(
     return nullptr;
   }
 
+  std::unique_ptr<tamp::executor::MotionExecutor> controller =
+      executor::MotionExecutor::MakeFromRosParam(ph, planning_scene);
+  if (controller == nullptr) {
+    ROS_ERROR("Can not make controller!");
+    return nullptr;
+  }
+
   return std::unique_ptr<TaskAndMotionPlanner>(new TaskAndMotionPlanner(
       std::move(planning_scene), std::move(motion_planner),
-      std::move(trajectory_feedback)));
+      std::move(trajectory_feedback), std::move(controller)));
 }
 
 std::vector<std::string> generate_partial_scene(
@@ -86,11 +96,18 @@ TmpOutput TaskAndMotionPlanner::interface(
       // if (false) {
       // TODO: execute interface
       // execute(plan_result);
-      if (delay_flag) {
-        delay_flag = 0;
-        ros::Duration(2.8).sleep();
+      // if (delay_flag) {
+      //   delay_flag = 0;
+      //   ros::Duration(2.8).sleep();
+      // }
+      // ros::Duration(3.8).sleep();
+      ROS_INFO_STREAM("Start picking object : " << args.front());
+      if (!controller_->ExecutePick(args.front(), plan_result)) {
+        ROS_ERROR("Execution failed!");
+        output.plan_status = PlannerStatus::FAILED;
+        return output;
       }
-      ros::Duration(3.8).sleep();
+      ROS_INFO_STREAM("Finished picking object : " << args.front());
       planning_scene_->RemoveObject(args.front());
       continue;
     } else {
