@@ -4,13 +4,16 @@ collision_objects:
     shape_type: 1
     dimension: [0.2, 0.4, 0.4]
     primitive_poses: [0.5, 0.0, 0.2]
+    primitive_orientation: [0.0, 0.0, 0.0]
   - id: "table2" 
     frame_id: "panda_link0"
     shape_type: 1
     dimension: [0.4, 0.2, 0.4]
     primitive_poses: [0.0, 0.5, 0.2]
+    primitive_orientation: [0.0, 0.0, 0.0]
   - id: "cylinder1" 
     frame_id: "panda_link0"
     shape_type: 1
     dimension: [0.02, 0.02, 0.2]
     primitive_poses: [0.5, 0.0, 0.5]
+    primitive_orientation: [0.0, 0.0, 0.0]

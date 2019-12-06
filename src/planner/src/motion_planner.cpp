@@ -46,8 +46,8 @@ bool MotionPlanner::ConstructGrasp(
     grasp_candidates[i].grasp_pose.header.frame_id = params_.world_frame;
 
     tf2::Quaternion object_orientation;
-    tf2::convert(object_orientation,
-                 object_to_pickup.primitive_poses[0].orientation);
+    tf2::convert(object_to_pickup.primitive_poses[0].orientation,
+                 object_orientation);
     tf2::Vector3 object_position;
     tf2::fromMsg(object_to_pickup.primitive_poses[0].position, object_position);
     tf2::Transform object_transform(object_orientation, object_position);

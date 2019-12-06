@@ -9,160 +9,187 @@ collision_objects:
     shape_type: 1
     dimension: [0.4, 0.4, 0.01]
     primitive_poses: [0.6, 0.0, 0.4]
+    primitive_orientation: [0.0, 0.0, 0.0]
     movable: false
   - id: "table2" 
     frame_id: "panda_link0"
     shape_type: 1
     dimension: [0.4, 0.4, 0.01]
     primitive_poses: [0.0, 0.6, 0.4]
+    primitive_orientation: [0.0, 0.0, 0.0]
     movable: false
   - id: "cylinder1" 
     frame_id: "panda_link0"
     shape_type: 3
     dimension: [0.2, 0.02]
     primitive_poses: [0.6, 0.0, 0.5]
+    primitive_orientation: [0.0, 0.0, 0.0]
     movable: true
   - id: "cylinder2" 
     frame_id: "panda_link0"
     shape_type: 3
     dimension: [0.2, 0.02]
     primitive_poses: [0.6, 0.075, 0.5]
+    primitive_orientation: [0.0, 0.0, 0.0]
     movable: true
   - id: "cylinder3" 
     frame_id: "panda_link0"
     shape_type: 3
     dimension: [0.2, 0.02]
     primitive_poses: [0.6, 0.15, 0.5]
+    primitive_orientation: [0.0, 0.0, 0.0]
     movable: true
   - id: "cylinder4" 
     frame_id: "panda_link0"
     shape_type: 3
     dimension: [0.2, 0.02]
     primitive_poses: [0.6, -0.075, 0.5]
+    primitive_orientation: [0.0, 0.0, 0.0]
     movable: true
   - id: "cylinder5" 
     frame_id: "panda_link0"
     shape_type: 3
     dimension: [0.2, 0.02]
     primitive_poses: [0.6, -0.15, 0.5]
+    primitive_orientation: [0.0, 0.0, 0.0]
     movable: true
   - id: "cylinder6" 
     frame_id: "panda_link0"
     shape_type: 3
     dimension: [0.2, 0.02]
     primitive_poses: [0.525, 0.0, 0.5]
+    primitive_orientation: [0.0, 0.0, 0.0]
     movable: true
   - id: "cylinder7" 
     frame_id: "panda_link0"
     shape_type: 3
     dimension: [0.2, 0.02]
     primitive_poses: [0.525, 0.075, 0.5]
+    primitive_orientation: [0.0, 0.0, 0.0]
     movable: true
   - id: "cylinder8" 
     frame_id: "panda_link0"
     shape_type: 3
     dimension: [0.2, 0.02]
     primitive_poses: [0.525, 0.15, 0.5]
+    primitive_orientation: [0.0, 0.0, 0.0]
     movable: true
   - id: "cylinder9" 
     frame_id: "panda_link0"
     shape_type: 3
     dimension: [0.2, 0.02]
     primitive_poses: [0.525, -0.075, 0.5]
+    primitive_orientation: [0.0, 0.0, 0.0]
     movable: true
   - id: "cylinder10" 
     frame_id: "panda_link0"
     shape_type: 3
     dimension: [0.2, 0.02]
     primitive_poses: [0.525, -0.15, 0.5]
+    primitive_orientation: [0.0, 0.0, 0.0]
     movable: true
   - id: "cylinder11" 
     frame_id: "panda_link0"
     shape_type: 3
     dimension: [0.2, 0.02]
     primitive_poses: [0.45, 0.0, 0.5]
+    primitive_orientation: [0.0, 0.0, 0.0]
     movable: true
   - id: "cylinder12" 
     frame_id: "panda_link0"
     shape_type: 3
     dimension: [0.2, 0.02]
     primitive_poses: [0.45, 0.075, 0.5]
+    primitive_orientation: [0.0, 0.0, 0.0]
     movable: true
   - id: "cylinder13" 
     frame_id: "panda_link0"
     shape_type: 3
     dimension: [0.2, 0.02]
     primitive_poses: [0.45, 0.15, 0.5]
+    primitive_orientation: [0.0, 0.0, 0.0]
     movable: true
   - id: "cylinder14" 
     frame_id: "panda_link0"
     shape_type: 3
     dimension: [0.2, 0.02]
     primitive_poses: [0.45, -0.075, 0.5]
+    primitive_orientation: [0.0, 0.0, 0.0]
     movable: true
   - id: "cylinder15" 
     frame_id: "panda_link0"
     shape_type: 3
     dimension: [0.2, 0.02]
     primitive_poses: [0.45, -0.15, 0.5]
+    primitive_orientation: [0.0, 0.0, 0.0]
     movable: true
   - id: "cylinder16" 
     frame_id: "panda_link0"
     shape_type: 3
     dimension: [0.2, 0.02]
     primitive_poses: [0.675, 0.0, 0.5]
+    primitive_orientation: [0.0, 0.0, 0.0]
     movable: true
   - id: "cylinder17" 
     frame_id: "panda_link0"
     shape_type: 3
     dimension: [0.2, 0.02]
     primitive_poses: [0.675, 0.075, 0.5]
+    primitive_orientation: [0.0, 0.0, 0.0]
     movable: true
   - id: "cylinder18" 
     frame_id: "panda_link0"
     shape_type: 3
     dimension: [0.2, 0.02]
     primitive_poses: [0.675, 0.15, 0.5]
+    primitive_orientation: [0.0, 0.0, 0.0]
     movable: true
   - id: "cylinder19" 
     frame_id: "panda_link0"
     shape_type: 3
     dimension: [0.2, 0.02]
     primitive_poses: [0.675, -0.075, 0.5]
+    primitive_orientation: [0.0, 0.0, 0.0]
     movable: true
   - id: "cylinder20" 
     frame_id: "panda_link0"
     shape_type: 3
     dimension: [0.2, 0.02]
     primitive_poses: [0.675, -0.15, 0.5]
+    primitive_orientation: [0.0, 0.0, 0.0]
     movable: true
   - id: "cylinder21" 
     frame_id: "panda_link0"
     shape_type: 3
     dimension: [0.2, 0.02]
     primitive_poses: [0.75, 0.0, 0.5]
+    primitive_orientation: [0.0, 0.0, 0.0]
     movable: true
   - id: "cylinder22" 
     frame_id: "panda_link0"
     shape_type: 3
     dimension: [0.2, 0.02]
     primitive_poses: [0.75, 0.075, 0.5]
+    primitive_orientation: [0.0, 0.0, 0.0]
     movable: true
   - id: "cylinder23" 
     frame_id: "panda_link0"
     shape_type: 3
     dimension: [0.2, 0.02]
     primitive_poses: [0.75, 0.15, 0.5]
+    primitive_orientation: [0.0, 0.0, 0.0]
     movable: true
   - id: "cylinder24" 
     frame_id: "panda_link0"
     shape_type: 3
     dimension: [0.2, 0.02]
     primitive_poses: [0.75, -0.075, 0.5]
+    primitive_orientation: [0.0, 0.0, 0.0]
     movable: true
   - id: "cylinder25" 
     frame_id: "panda_link0"
     shape_type: 3
     dimension: [0.2, 0.02]
     primitive_poses: [0.75, -0.15, 0.5]
+    primitive_orientation: [0.0, 0.0, 0.0]
     movable: true
