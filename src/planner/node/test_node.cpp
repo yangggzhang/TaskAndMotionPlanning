@@ -32,14 +32,14 @@ int main(int argc, char** argv) {
   ros::WallDuration(1.0).sleep();
 
   std::string table = "table1";
-  std::string object = "cylinder1";
+  std::string object1 = "cylinder1";
+  std::string object2 = "cylinder2";
+  std::string object3 = "cylinder3";
 
-  std::vector<std::string> scene_objects;
-  scene_objects.push_back(table);
-  scene_objects.push_back(object);
+  std::vector<std::string> scene_objects{table, object1};
   moveit_msgs::PickupResultConstPtr plan_results;
 
-  if (motion_planner_ptr->PlanPick(scene_objects, object, table,
+  if (motion_planner_ptr->PlanPick(scene_objects, object1, table,
                                    plan_results)) {
     ROS_INFO_STREAM("Get plan!");
   } else {
@@ -50,13 +50,17 @@ int main(int argc, char** argv) {
 
   std::vector<std::string> collided_objects;
 
+  std::vector<std::string> full_scene_objects{table, object1, object2, object3};
   if (trajectory_feedback_ptr->GetCollisionFeedback(
-          scene_objects, object, plan_results, collided_objects)) {
+          full_scene_objects, object1, plan_results, collided_objects)) {
     ROS_INFO_STREAM("Finish trajectory evaluation!");
   } else {
     ROS_INFO_STREAM("Finish trajectory evaluation failed!");
   }
 
+  for (const std::string& object : collided_objects) {
+    ROS_INFO_STREAM("Object : " << object << " in collision!");
+  }
   ros::waitForShutdown();
   return 0;
 }

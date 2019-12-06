@@ -32,7 +32,7 @@ bool TrajectoryFeedback::HasCollision(
       std::string object1 = it->first.first.c_str();
       std::string object2 = it->first.second.c_str();
       if (pickup_object.compare(object1) == 0 ||
-          pickup_object.compare(object2)) {
+          pickup_object.compare(object2) == 0) {
         continue;
       }
 
