@@ -134,21 +134,6 @@ bool PlanningSceneParam::ParseFromRosParam(ros::NodeHandle &ph) {
     collision_object.primitive_poses[0].orientation =
         tf2::toMsg(obj_orientation);
 
-    std::vector<double> primitive_orientation;
-    if (!utils::GetParam(object_param, "primitive_orientation",
-                         primitive_orientation)) {
-      return false;
-    }
-    if (primitive_poses.size() != 3) {
-      return false;
-    }
-    tf2::Quaternion obj_orientation;
-    obj_orientation.setRPY(primitive_orientation[0], primitive_orientation[1],
-                           primitive_orientation[2]);
-
-    collision_object.primitive_poses[0].orientation =
-        tf2::toMsg(obj_orientation);
-
     collision_object.operation = collision_object.ADD;
 
     collision_objects_.push_back(collision_object);

@@ -73,10 +73,10 @@ TmpOutput TaskAndMotionPlanner::interface(
       ROS_ERROR_STREAM("Argument is empty in GroundedAction" +
                        action.toString());
     }
-
+    ROS_INFO("Plan with original scene starts");
     motion_planner_->PlanPick(scene_objects, args.front(), "Table",
                               plan_result);
-    ROS_INFO("Plan with original scene finished");
+    ROS_INFO("Plan with original scene finishes");
 
     // MockPlanner::PlanPick(scene_objects, args.front(), "Table", plan_result,
     //                       test_cnt++);
@@ -88,11 +88,12 @@ TmpOutput TaskAndMotionPlanner::interface(
       continue;
     } else {
       // plan with partial scene
+      ROS_INFO("Plan with partial scene starts");
       std::vector<std::string> partial_scene_objects =
           generate_partial_scene(actions, i);
       motion_planner_->PlanPick(partial_scene_objects, args.front(), "Table",
                                 plan_result);
-      ROS_INFO("Plan with partial scene finished");
+      ROS_INFO("Plan with partial scene finishes");
       // MockPlanner::PlanPick(partial_scene_objects, args.front(), "Table",
       //                       plan_result, test_cnt++);
       if (plan_result != nullptr) {
