@@ -71,16 +71,17 @@ TmpOutput TaskAndMotionPlanner::interface(
       ROS_ERROR_STREAM("Argument is empty in GroundedAction" +
                        action.toString());
     }
+
     motion_planner_->PlanPick(scene_objects, args.front(), "Table",
                               plan_result);
-    ROS_ERROR("1st plan finished");
-    motion_planner_->PlanPick(scene_objects, args.front(), "Table",
-                              plan_result);
-    ROS_ERROR("2nd plan finished");
+    ROS_INFO("Plan with original scene finished");
+    // motion_planner_->PlanPick(scene_objects, args.front(), "Table",
+    //                           plan_result);
+    // ROS_INFO("2nd plan finished");
     // MockPlanner::PlanPick(scene_objects, args.front(), "Table", plan_result,
     //                       test_cnt++);
-    // if (plan_result != nullptr) {
-    if (false) {
+    if (plan_result != nullptr) {
+      // if (false) {
       // TODO: execute interface
       // execute(plan_result);
       continue;
@@ -90,7 +91,7 @@ TmpOutput TaskAndMotionPlanner::interface(
           generate_partial_scene(actions, i);
       motion_planner_->PlanPick(partial_scene_objects, args.front(), "Table",
                                 plan_result);
-      ROS_ERROR("Inside plan finished");
+      ROS_INFO("Plan with partial scene finished");
       // MockPlanner::PlanPick(partial_scene_objects, args.front(), "Table",
       //                       plan_result, test_cnt++);
       if (plan_result != nullptr) {
