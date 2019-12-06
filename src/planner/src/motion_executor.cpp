@@ -21,7 +21,11 @@ bool MotionExecutor::ExecutePick(
     const moveit_msgs::PickupResultConstPtr& plan_result) {
   ROS_INFO_STREAM("Trajectory total stage "
                   << plan_result->trajectory_stages.size());
-  for (int i = 0; i < plan_result->trajectory_stages.size()-1; ++i) {
+  int num_stages = 4;
+  if(pickup_object == "C3") {
+    num_stages = 5;
+  }
+  for (int i = 0; i < num_stages; ++i) {
     ROS_INFO_STREAM("Execution : " << i);
     if (i == KAttachStage) {
       if (!planning_scene_interface_->AttachObjectToRobot(
