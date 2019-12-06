@@ -5,6 +5,7 @@ namespace tamp {
 namespace planner {
 static int test_cnt = 0;
 static int test_cnt_cc = 0;
+static bool delay_flag = 1;
 
 TaskAndMotionPlanner::TaskAndMotionPlanner(
     std::shared_ptr<scene::PlanningScene> planning_scene,
@@ -85,8 +86,12 @@ TmpOutput TaskAndMotionPlanner::interface(
       // if (false) {
       // TODO: execute interface
       // execute(plan_result);
+      if (delay_flag) {
+        delay_flag = 0;
+        ros::Duration(2.8).sleep();
+      }
+      ros::Duration(3.8).sleep();
       planning_scene_->RemoveObject(args.front());
-      ros::Duration(5.0).sleep();
       continue;
     } else {
       // plan with partial scene
