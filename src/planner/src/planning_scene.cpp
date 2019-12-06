@@ -102,5 +102,20 @@ bool PlanningScene::resetScene() {
   return true;
 }
 
+bool PlanningScene::ApplyScene(const std::vector<std::string> &scene_objects) {
+  resetScene();
+  std::vector<moveit_msgs::CollisionObject> collision_objects;
+  for (const std::string &object : scene_objects) {
+    if (collision_object_table_.find(object) == collision_object_table_.end()) {
+      ROS_ERROR_STREAM(
+          "Object : " << object << " does not exist in the planning scene !");
+      return false;
+    } else {
+      collision_objects.push_back(collision_object_table_[object]);
+    }
+  }
+  return scene_->applyCollisionObjects(collision_objects);
+}
+
 }  // namespace scene
 }  // namespace tamp

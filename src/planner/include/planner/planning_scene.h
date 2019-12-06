@@ -26,6 +26,8 @@ class PlanningScene {
 
   bool RemoveObject(const std::string &object);
 
+  bool ApplyScene(const std::vector<std::string> &scene_objects);
+
   std::vector<std::string> getCollisionObjects();
 
   bool resetScene();

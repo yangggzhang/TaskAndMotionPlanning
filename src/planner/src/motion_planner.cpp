@@ -128,14 +128,18 @@ bool MotionPlanner::ConstructPickupGoal(
     const std::vector<std::string>& scene_objects,
     const std::string& pickup_object, const std::string& pickup_object_from,
     moveit_msgs::PickupGoal& goal) {
-  moveit_msgs::PlanningScene pickup_scene;
-  if (!planning_scene_interface_->GetPlanningScene(scene_objects,
-                                                   pickup_scene)) {
+  // moveit_msgs::PlanningScene pickup_scene;
+  // if (!planning_scene_interface_->GetPlanningScene(scene_objects,
+  //                                                  pickup_scene)) {
+  //   ROS_ERROR("Can not set up planning scene for pick up action");
+  //   return false;
+  // }
+
+  // planning_scene_pub.publish(pickup_scene);
+  if (!planning_scene_interface_->ApplyScene(scene_objects)) {
     ROS_ERROR("Can not set up planning scene for pick up action");
     return false;
   }
-
-  planning_scene_pub.publish(pickup_scene);
 
   goal.target_name = pickup_object;
   goal.group_name = params_.move_group;
@@ -150,7 +154,7 @@ bool MotionPlanner::ConstructPickupGoal(
   goal.possible_grasps = grasp_candidates;
   goal.allow_gripper_support_collision = true;
   goal.planning_options.plan_only = params_.plan_only;
-  goal.planning_options.planning_scene_diff = pickup_scene;
+  // goal.planning_options.planning_scene_diff = pickup_scene;
   goal.planning_options.replan = true;
   goal.planning_options.replan_attempts = params_.num_planning_attempts;
   goal.allowed_planning_time = params_.max_planning_time_sec;
