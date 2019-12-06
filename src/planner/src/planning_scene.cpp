@@ -1,6 +1,8 @@
 #include "planner/planning_scene.h"
 #include "planner/planning_utils.h"
 
+#include <moveit_msgs/AttachedCollisionObject.h>
+
 namespace tamp {
 namespace scene {
 // static function
@@ -47,6 +49,21 @@ bool PlanningScene::ValidateScene(
     }
   }
   return true;
+}
+
+bool PlanningScene::AttachObjectToRobot(
+    const std::string &object, const std::string &link_name,
+    const std::vector<std::string> &touch_links) {
+  if (collision_object_table_.find(object) == collision_object_table_.end()) {
+    ROS_ERROR_STREAM("Object : " << object
+                                 << " does not exist in the planning scene !");
+    return false;
+  }
+  moveit_msgs::AttachedCollisionObject msg;
+  msg.link_name = link_name;
+  msg.touch_links = touch_links;
+  msg.object = collision_object_table_[object];
+  return scene_->applyAttachedCollisionObject(msg);
 }
 
 bool PlanningScene::GetPlanningScene(
