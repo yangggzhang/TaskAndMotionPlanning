@@ -26,9 +26,10 @@ class PlanningScene {
 
   bool RemoveObject(const std::string &object);
 
-  bool AttachObjectToRobot(const std::string &object,
-                           const std::string &link_name,
-                           const std::vector<std::string> &touch_links);
+  bool AttachObjectToRobot(
+      const std::string &object, const std::string &link_name,
+      const std::vector<std::string> &touch_links,
+      const trajectory_msgs::JointTrajectory &detach_posture);
 
   bool ApplyScene(const std::vector<std::string> &scene_objects);
 

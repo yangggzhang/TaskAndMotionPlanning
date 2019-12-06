@@ -53,7 +53,8 @@ bool PlanningScene::ValidateScene(
 
 bool PlanningScene::AttachObjectToRobot(
     const std::string &object, const std::string &link_name,
-    const std::vector<std::string> &touch_links) {
+    const std::vector<std::string> &touch_links,
+    const trajectory_msgs::JointTrajectory &detach_posture) {
   if (collision_object_table_.find(object) == collision_object_table_.end()) {
     ROS_ERROR_STREAM("Object : " << object
                                  << " does not exist in the planning scene !");
@@ -63,6 +64,7 @@ bool PlanningScene::AttachObjectToRobot(
   msg.link_name = link_name;
   msg.touch_links = touch_links;
   msg.object = collision_object_table_[object];
+  msg.detach_posture = detach_posture;
   return scene_->applyAttachedCollisionObject(msg);
 }
 

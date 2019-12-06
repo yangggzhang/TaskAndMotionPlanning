@@ -21,11 +21,20 @@ bool MotionExecutor::ExecutePick(
     const moveit_msgs::PickupResultConstPtr& plan_result) {
   ROS_INFO_STREAM("Trajectory total stage "
                   << plan_result->trajectory_stages.size());
+  trajectory_msgs::JointTrajectory detach_posture;
+  trajectory_msgs::JointTrajectory last_trajectory =
+      plan_result->trajectory_stages.back().joint_trajectory;
+  detach_posture.header = last_trajectory.header;
+  detach_posture.joint_names = last_trajectory.joint_names;
+  detach_posture.points.resize(1);
+  detach_posture.points[0] = last_trajectory.points.back();
+  ROS_INFO_STREAM("Detach posture size : " << detach_posture.points.size());
   for (int i = 0; i < plan_result->trajectory_stages.size(); ++i) {
     ROS_INFO_STREAM("Execution : " << i);
     if (i == KAttachStage) {
       if (!planning_scene_interface_->AttachObjectToRobot(
-              pickup_object, param_.link_name, param_.touch_links)) {
+              pickup_object, param_.link_name, param_.touch_links,
+              detach_posture)) {
         ROS_ERROR_STREAM("Failed to attach : " << pickup_object
                                                << " to robot : "
                                                << param_.move_group);
@@ -34,7 +43,9 @@ bool MotionExecutor::ExecutePick(
     }
     moveit::planning_interface::MoveGroupInterface::Plan motion_plan;
     motion_plan.trajectory_ = plan_result->trajectory_stages[i];
-    controller_->execute(motion_plan);
+    if (!controller_->execute(motion_plan)) {
+      return false;
+    }
   }
   return true;
 }
