@@ -7,25 +7,41 @@ std::unique_ptr<MotionExecutor> MotionExecutor::MakeFromRosParam(
     ros::NodeHandle& ph,
     std::shared_ptr<scene::PlanningScene> planning_scene_interface) {
   std::string move_group;
-  if (!ph.getParam("move_group", move_group)) {
-    ROS_ERROR("Missing executor move group name!");
+  MotionExecutorParam param;
+  if (!param.LoadFromRosParams(ph)) {
+    ROS_ERROR("Failed loading executor parameters!");
     return nullptr;
   }
   return std::unique_ptr<MotionExecutor>(
-      new MotionExecutor(move_group, std::move(planning_scene_interface)));
+      new MotionExecutor(param, std::move(planning_scene_interface)));
 }
 
 bool MotionExecutor::ExecutePick(
     const std::string& pickup_object,
     const moveit_msgs::PickupResultConstPtr& plan_result) {
+  for (int i = 0; i < plan_result->trajectory_stages.size(); ++i) {
+    if (i == KAttachStage) {
+      if (!planning_scene_interface_->AttachObjectToRobot(
+              pickup_object, param_.link_name, param_.touch_links)) {
+        ROS_ERROR_STREAM("Failed to attach : " << pickup_object
+                                               << " to robot : "
+                                               << param_.move_group);
+        return false;
+      }
+    }
+    moveit::planning_interface::MoveGroupInterface::Plan motion_plan;
+    motion_plan.trajectory_ = plan_result->trajectory_stages[i];
+    controller_->execute(motion_plan);
+  }
   return true;
 }
 
 MotionExecutor::MotionExecutor(
-    const std::string& move_group_name,
+    const MotionExecutorParam& param,
     std::shared_ptr<scene::PlanningScene> planning_scene_interface)
-    : planning_scene_interface_(std::move(planning_scene_interface)) {
-  controller_.reset(new Controller(move_group_name));
+    : param_(param),
+      planning_scene_interface_(std::move(planning_scene_interface)) {
+  controller_.reset(new Controller(param.move_group));
 }
 
 }  // namespace executor

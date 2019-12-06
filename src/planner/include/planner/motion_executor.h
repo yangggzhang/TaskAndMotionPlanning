@@ -10,6 +10,8 @@
 
 namespace tamp {
 namespace executor {
+
+const int KAttachStage = 4;
 using Controller = moveit::planning_interface::MoveGroupInterface;
 
 class MotionExecutor {
