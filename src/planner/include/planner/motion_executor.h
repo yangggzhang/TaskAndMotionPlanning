@@ -1,5 +1,6 @@
 #pragma once
 
+#include "motion_executor_params.h"
 #include "planning_scene.h"
 
 #include <moveit/move_group_interface/move_group_interface.h>
@@ -24,12 +25,14 @@ class MotionExecutor {
 
  private:
   MotionExecutor(
-      const std::string& move_group_name,
+      const MotionExecutorParam& param,
       std::shared_ptr<scene::PlanningScene> planning_scene_interface);
 
   std::shared_ptr<scene::PlanningScene> planning_scene_interface_;
 
   std::unique_ptr<Controller> controller_;
+
+  MotionExecutorParam param_;
 };
 }  // namespace executor
 }  // namespace tamp

@@ -17,3 +17,5 @@ grasps:
     gripper_open_joint_positions: [ 0.04, 0.04]
     gripper_closed_joint_positions: [ 0.00, 0.00]
     gripper_time_from_start: 0.5
+link_name: "panda_leftfinger"
+touch_links: ["panda_hand", "panda_leftfinger", "panda_rightfinger"]
