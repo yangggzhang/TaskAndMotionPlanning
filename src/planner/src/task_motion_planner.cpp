@@ -93,14 +93,7 @@ TmpOutput TaskAndMotionPlanner::interface(
     //                       test_cnt++);
 
     if (plan_result != nullptr) {
-      // if (false) {
-      // TODO: execute interface
-      // execute(plan_result);
-      // if (delay_flag) {
-      //   delay_flag = 0;
-      //   ros::Duration(2.8).sleep();
-      // }
-      // ros::Duration(3.8).sleep();
+      ros::WallDuration(1.0).sleep();
       ROS_INFO_STREAM("Start picking object : " << args.front());
       if (!controller_->ExecutePick(args.front(), plan_result)) {
         ROS_ERROR("Execution failed!");
