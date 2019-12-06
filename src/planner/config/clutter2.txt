@@ -1,0 +1,8 @@
+Symbols: Table,C6,C5,C4,C3,C2,C1,C0
+Initial conditions: NotBlock(C6,C6), NotBlock(C6,C5), NotBlock(C6,C4), NotBlock(C6,C3), NotBlock(C6,C2), NotBlock(C6,C1), NotBlock(C6,C0), NotBlock(C5,C6), NotBlock(C5,C5), NotBlock(C5,C4), NotBlock(C5,C3), NotBlock(C5,C2), NotBlock(C5,C1), NotBlock(C5,C0), NotBlock(C4,C6), NotBlock(C4,C5), NotBlock(C4,C4), NotBlock(C4,C3), NotBlock(C4,C2), NotBlock(C4,C1), NotBlock(C4,C0), NotBlock(C3,C6), NotBlock(C3,C5), NotBlock(C3,C4), NotBlock(C3,C3), NotBlock(C3,C2), NotBlock(C3,C1), NotBlock(C3,C0), NotBlock(C2,C6), NotBlock(C2,C5), NotBlock(C2,C4), NotBlock(C2,C3), NotBlock(C2,C2), NotBlock(C2,C1), NotBlock(C2,C0), NotBlock(C1,C6), NotBlock(C1,C5), NotBlock(C1,C4), NotBlock(C1,C3), NotBlock(C1,C2), NotBlock(C1,C1), NotBlock(C1,C0), NotBlock(C0,C6), NotBlock(C0,C5), NotBlock(C0,C4), NotBlock(C0,C3), NotBlock(C0,C2), NotBlock(C0,C1), NotBlock(C0,C0), Exist(Table), Exist(C6), Exist(C5), Exist(C4), Exist(C3), Exist(C2), Exist(C1), Exist(C0)
+Goal conditions: Get(C3)
+
+Actions:
+        Pick(x)
+        Preconditions: NotBlock(C6,x), NotBlock(C5,x), NotBlock(C4,x), NotBlock(C3,x), NotBlock(C2,x), NotBlock(C1,x), NotBlock(C0,x), Exist(x)
+        Effects: Get(x), !Exist(x), NotBlock(x,C6), NotBlock(x,C5), NotBlock(x,C4), NotBlock(x,C3), NotBlock(x,C2), NotBlock(x,C1), NotBlock(x,C0), 

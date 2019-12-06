@@ -5,7 +5,7 @@ import itertools
 
 # global parameters, load from somewhere later
 
-yaml_path = "CollisionObjects.yaml"
+yaml_path = "scene2.yaml"
 def generateConditions(condition, num_args, object_list):
     
     condition_arguments = list(itertools.product(object_list,repeat=num_args))

@@ -1,4 +1,4 @@
-description_file_path: "./clutter3.txt"
+description_file_path: "./clutter1.txt"
 goal_condition: "Get(C3)"
 action: "Pick"
 action_args: ["x"]
@@ -15,14 +15,14 @@ collision_objects:
     frame_id: "panda_link0"
     shape_type: 3
     dimension: [0.2, 0.02]
-    primitive_poses: [0.8, 0.15, 0.5]
+    primitive_poses: [0.8, 0.0, 0.5]
     primitive_orientation: [0.0, 0.0, 0.0]
     movable: true
   - id: "C4" 
     frame_id: "panda_link0"
     shape_type: 3
     dimension: [0.2, 0.02]
-    primitive_poses: [0.55, 0.2, 0.5]
+    primitive_poses: [0.75, 0.2, 0.5]
     primitive_orientation: [0.0, 0.0, 0.0]
     movable: true
   - id: "C2" 
@@ -36,13 +36,13 @@ collision_objects:
     frame_id: "panda_link0"
     shape_type: 3
     dimension: [0.2, 0.02]
-    primitive_poses: [0.6, 0.15, 0.5]
+    primitive_poses: [0.5, -0.15, 0.5]
     primitive_orientation: [0.0, 0.0, 0.0]
     movable: true
   - id: "C0" 
     frame_id: "panda_link0"
     shape_type: 3
     dimension: [0.2, 0.02]
-    primitive_poses: [0.6, -0.1, 0.5]
+    primitive_poses: [0.6, 0.15, 0.5]
     primitive_orientation: [0.0, 0.0, 0.0]
     movable: true
