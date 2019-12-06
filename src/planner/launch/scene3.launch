@@ -1,0 +1,7 @@
+<launch>
+  <node pkg="planner" type="TAMP_node" name="TAMP_node" output="screen"> 
+    <rosparam command="load" file="$(find planner)/config/scene3.yaml" />
+    <rosparam command="load" file="$(find planner)/config/MotionParams.yaml" />
+    <param name="description_file" type="string" value="$(find planner)/config/clutter.txt" />
+  </node>
+</launch>
