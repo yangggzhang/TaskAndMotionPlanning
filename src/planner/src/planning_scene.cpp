@@ -76,6 +76,7 @@ bool PlanningScene::RemoveObject(const std::string &object) {
     return false;
   } else {
     collision_object_table_.erase(object);
+    scene_->removeCollisionObjects({object});
     return true;
   }
   return true;

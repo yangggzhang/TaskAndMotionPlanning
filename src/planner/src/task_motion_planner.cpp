@@ -85,6 +85,8 @@ TmpOutput TaskAndMotionPlanner::interface(
       // if (false) {
       // TODO: execute interface
       // execute(plan_result);
+      planning_scene_->RemoveObject(args.front());
+      ros::Duration(5.0).sleep();
       continue;
     } else {
       // plan with partial scene

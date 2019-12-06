@@ -9,13 +9,13 @@ collision_objects:
     frame_id: "panda_link0"
     shape_type: 3
     dimension: [0.2, 0.02]
-    primitive_poses: [0.65, 0.1, 0.5]
+    primitive_poses: [0.65, 0.1, 0.0]
     primitive_orientation: [0.0, 0.0, 0.0]
   - id: "C4" 
     frame_id: "panda_link0"
     shape_type: 3
     dimension: [0.2, 0.02]
-    primitive_poses: [0.65, -0.1, 0.5]
+    primitive_poses: [0.4, 0.0, 0.5]
     primitive_orientation: [0.0, 0.0, 0.0]
   - id: "C3" 
     frame_id: "panda_link0"
@@ -27,11 +27,11 @@ collision_objects:
     frame_id: "panda_link0"
     shape_type: 3
     dimension: [0.2, 0.02]
-    primitive_poses: [0.45, -0.1, 0.5]
+    primitive_poses: [0.45, -0.1, 0.0]
     primitive_orientation: [0.0, 0.0, 0.0]
   - id: "C0" 
     frame_id: "panda_link0"
     shape_type: 3
     dimension: [0.2, 0.02]
-    primitive_poses: [0.45, 0.1, 0.5]
+    primitive_poses: [0.45, 0.1, 0.0]
     primitive_orientation: [0.0, 0.0, 0.0]
