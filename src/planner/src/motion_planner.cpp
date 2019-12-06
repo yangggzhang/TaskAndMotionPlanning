@@ -7,7 +7,8 @@ namespace planner {
 
 MotionPlanner::MotionPlanner(
     std::shared_ptr<scene::PlanningScene> planning_scene_interface,
-    std::unique_ptr<PickupPlanner> planner, const MotionPlannerParams& params)
+    std::unique_ptr<PickupPlanner> planner, const MotionPlannerParams& params,
+    ros::NodeHandle& ph)
     : planning_scene_interface_(std::move(planning_scene_interface)),
       pickup_planner_(std::move(planner)),
       params_(params) {
@@ -16,10 +17,16 @@ MotionPlanner::MotionPlanner(
   } else {
     ROS_INFO("Pick up server connected!");
   }
+  std::string a = "pickupgoal";
+  std::string b = "planningscene";
+  this->pickup_goal_pub =
+      ph.advertise<moveit_msgs::PickupGoal>("pickupgoal", 10);
+  this->planning_scene_pub =
+      ph.advertise<moveit_msgs::PlanningScene>("planningscene", 10);
 }
 
 std::unique_ptr<MotionPlanner> MotionPlanner::MakeUniqueFromRosParam(
-    const ros::NodeHandle& ph,
+    ros::NodeHandle& ph,
     std::shared_ptr<scene::PlanningScene> planning_scene_interface) {
   MotionPlannerParams param;
   if (!param.LoadFromRosParams(ph)) {
@@ -36,8 +43,10 @@ std::unique_ptr<MotionPlanner> MotionPlanner::MakeUniqueFromRosParam(
   } else {
     ROS_INFO_STREAM("Pick up planner is up!");
   }
-  return std::unique_ptr<MotionPlanner>(new MotionPlanner(
-      std::move(planning_scene_interface), std::move(pickup_planner), param));
+
+  return std::unique_ptr<MotionPlanner>(
+      new MotionPlanner(std::move(planning_scene_interface),
+                        std::move(pickup_planner), param, ph));
 }
 
 bool MotionPlanner::ConstructGrasp(
@@ -125,6 +134,7 @@ bool MotionPlanner::ConstructPickupGoal(
     ROS_ERROR("Can not set up planning scene for pick up action");
     return false;
   }
+  planning_scene_pub.publish(pickup_scene);
 
   goal.target_name = pickup_object;
   goal.group_name = params_.move_group;
@@ -162,6 +172,7 @@ bool MotionPlanner::PlanPick(const std::vector<std::string>& scene_objects,
                      << pickup_object << " on " << pickup_object_from);
     return false;
   }
+  pickup_goal_pub.publish(pickup_goal);
 
   const auto state = pickup_planner_->sendGoalAndWait(
       pickup_goal, ros::Duration(params_.max_planning_time_sec));

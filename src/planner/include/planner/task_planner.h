@@ -11,7 +11,7 @@ class TaskPlanner {
  public:
   TaskPlanner() = delete;
   static std::unique_ptr<TaskPlanner> MakeFromRosParam(
-      const ros::NodeHandle& ph);
+      ros::NodeHandle& ph);
 
   std::vector<GroundedAction> run(Heuristic heuristicOption = NoHeuristic);
 

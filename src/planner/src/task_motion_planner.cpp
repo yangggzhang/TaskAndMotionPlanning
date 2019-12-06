@@ -15,7 +15,7 @@ TaskAndMotionPlanner::TaskAndMotionPlanner(
       trajectory_feedback_(std::move(trajectory_feedback)) {}
 
 std::unique_ptr<TaskAndMotionPlanner> TaskAndMotionPlanner::Make(
-    const ros::NodeHandle& ph) {
+    ros::NodeHandle& ph) {
   std::shared_ptr<scene::PlanningScene> planning_scene =
       scene::PlanningScene::MakeSharedFromRosParam(ph);
   if (planning_scene == nullptr) {
@@ -73,10 +73,14 @@ TmpOutput TaskAndMotionPlanner::interface(
     }
     motion_planner_->PlanPick(scene_objects, args.front(), "Table",
                               plan_result);
-
+    ROS_ERROR("1st plan finished");
+    motion_planner_->PlanPick(scene_objects, args.front(), "Table",
+                              plan_result);
+    ROS_ERROR("2nd plan finished");
     // MockPlanner::PlanPick(scene_objects, args.front(), "Table", plan_result,
     //                       test_cnt++);
-    if (plan_result != nullptr) {
+    // if (plan_result != nullptr) {
+    if (false) {
       // TODO: execute interface
       // execute(plan_result);
       continue;
@@ -86,6 +90,7 @@ TmpOutput TaskAndMotionPlanner::interface(
           generate_partial_scene(actions, i);
       motion_planner_->PlanPick(partial_scene_objects, args.front(), "Table",
                                 plan_result);
+      ROS_ERROR("Inside plan finished");
       // MockPlanner::PlanPick(partial_scene_objects, args.front(), "Table",
       //                       plan_result, test_cnt++);
       if (plan_result != nullptr) {
@@ -106,7 +111,7 @@ TmpOutput TaskAndMotionPlanner::interface(
   }
   output.plan_status = PlannerStatus::SUCCESS;
   return output;
-}
+}  // namespace planner
 
 }  // namespace planner
 }  // namespace tamp

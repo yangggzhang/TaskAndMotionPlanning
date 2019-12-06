@@ -5,7 +5,7 @@ namespace tamp {
 namespace scene {
 // static function
 std::shared_ptr<PlanningScene> PlanningScene::MakeSharedFromRosParam(
-    const ros::NodeHandle &ph) {
+    ros::NodeHandle &ph) {
   PlanningSceneParam param;
   if (!param.ParseFromRosParam(ph)) {
     ROS_ERROR(
@@ -82,8 +82,7 @@ bool PlanningScene::RemoveObject(const std::string &object) {
 
 std::vector<std::string> PlanningScene::getCollisionObjects() {
   std::vector<std::string> key_set;
-  for (const auto& k : collision_object_table_)
-  {
+  for (const auto &k : collision_object_table_) {
     key_set.push_back(k.first);
   }
   return std::move(key_set);

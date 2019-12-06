@@ -21,7 +21,7 @@ class TaskAndMotionPlanner {
  public:
   TaskAndMotionPlanner() = delete;
 
-  static std::unique_ptr<TaskAndMotionPlanner> Make(const ros::NodeHandle& ph);
+  static std::unique_ptr<TaskAndMotionPlanner> Make(ros::NodeHandle& ph);
 
   TmpOutput interface(const std::vector<GroundedAction>& actions);
 

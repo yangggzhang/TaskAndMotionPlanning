@@ -5,7 +5,7 @@ namespace tamp {
 namespace scene {
 PlanningSceneParam::PlanningSceneParam(){};
 
-bool PlanningSceneParam::ParseFromRosParam(const ros::NodeHandle &ph) {
+bool PlanningSceneParam::ParseFromRosParam(ros::NodeHandle &ph) {
   collision_objects_.clear();
   XmlRpc::XmlRpcValue object_param_list;
   ph.getParam("collision_objects", object_param_list);

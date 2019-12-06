@@ -10,7 +10,7 @@ class PlanningSceneParam {
  public:
   PlanningSceneParam();
 
-  bool ParseFromRosParam(const ros::NodeHandle &ph);
+  bool ParseFromRosParam(ros::NodeHandle &ph);
 
   std::vector<moveit_msgs::CollisionObject> GetCollisionObjects();
 

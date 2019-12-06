@@ -3,7 +3,7 @@
 namespace tamp {
 namespace planner {
 std::unique_ptr<TaskPlanner> TaskPlanner::MakeFromRosParam(
-    const ros::NodeHandle& ph) {
+    ros::NodeHandle& ph) {
   std::string df;
   if (!ph.getParam("description_file", df)) {
     ROS_ERROR_STREAM("Missing description file path!");

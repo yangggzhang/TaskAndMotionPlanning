@@ -4,26 +4,6 @@ collision_objects:
     shape_type: 1
     dimension: [0.4, 0.4, 0.01]
     primitive_poses: [0.6, 0.0, 0.4]
-  - id: "C2" 
-    frame_id: "panda_link0"
-    shape_type: 3
-    dimension: [0.2, 0.02]
-    primitive_poses: [0.6, 0.0, 0.5]
-  - id: "C3" 
-    frame_id: "panda_link0"
-    shape_type: 3
-    dimension: [0.2, 0.02]
-    primitive_poses: [0.6, 0.075, 0.5]
-  - id: "C4" 
-    frame_id: "panda_link0"
-    shape_type: 3
-    dimension: [0.2, 0.02]
-    primitive_poses: [0.6, 0.15, 0.5]
-  - id: "C1" 
-    frame_id: "panda_link0"
-    shape_type: 3
-    dimension: [0.2, 0.02]
-    primitive_poses: [0.6, -0.075, 0.5]
   - id: "C0" 
     frame_id: "panda_link0"
     shape_type: 3

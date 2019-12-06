@@ -25,7 +25,7 @@ struct MoveItGrasp {
 
 class MotionPlannerParams {
  public:
-  bool LoadFromRosParams(const ros::NodeHandle& ph);
+  bool LoadFromRosParams(ros::NodeHandle& ph);
 
   std::string move_group;
 
