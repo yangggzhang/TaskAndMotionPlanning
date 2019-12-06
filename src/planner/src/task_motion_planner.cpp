@@ -76,7 +76,7 @@ TmpOutput TaskAndMotionPlanner::interface(
     ROS_INFO("Plan with original scene starts");
     motion_planner_->PlanPick(scene_objects, args.front(), "Table",
                               plan_result);
-    ROS_INFO("Plan with original scene finishes");
+    ROS_INFO(" ");
 
     // MockPlanner::PlanPick(scene_objects, args.front(), "Table", plan_result,
     //                       test_cnt++);
@@ -93,7 +93,7 @@ TmpOutput TaskAndMotionPlanner::interface(
           generate_partial_scene(actions, i);
       motion_planner_->PlanPick(partial_scene_objects, args.front(), "Table",
                                 plan_result);
-      ROS_INFO("Plan with partial scene finishes");
+      ROS_INFO(" ");
       // MockPlanner::PlanPick(partial_scene_objects, args.front(), "Table",
       //                       plan_result, test_cnt++);
       if (plan_result != nullptr) {

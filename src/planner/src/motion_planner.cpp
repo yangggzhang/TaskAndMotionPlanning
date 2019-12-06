@@ -170,12 +170,15 @@ bool MotionPlanner::PlanPick(const std::vector<std::string>& scene_objects,
     ROS_ERROR("Pick up server is not connected!");
     return false;
   }
-  ROS_INFO_STREAM("Scene objects: ");
+
+  std::string obj_list = "Scene objects: ";
   for (const auto& obj : scene_objects) {
-    ROS_INFO_STREAM(obj);
+    obj_list += obj;
+    obj_list += ", ";
   }
-  ROS_INFO_STREAM("Pick up objects: ");
-  ROS_INFO_STREAM(pickup_object);
+  ROS_INFO_STREAM(obj_list);
+
+  ROS_INFO_STREAM("Pick up objects: " + pickup_object);
 
   moveit_msgs::PickupGoal pickup_goal;
   if (!ConstructPickupGoal(scene_objects, pickup_object, pickup_object_from,
