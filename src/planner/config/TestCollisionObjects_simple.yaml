@@ -1,0 +1,11 @@
+collision_objects:
+  - id: "Table" 
+    frame_id: "panda_link0"
+    shape_type: 1
+    dimension: [0.4, 0.4, 0.01]
+    primitive_poses: [0.6, 0.0, 0.4]
+  - id: "C3" 
+    frame_id: "panda_link0"
+    shape_type: 3
+    dimension: [0.2, 0.02]
+    primitive_poses: [0.6, 0.075, 0.5]

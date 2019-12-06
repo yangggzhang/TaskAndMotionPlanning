@@ -4,5 +4,5 @@ Goal conditions: Get(C3)
 
 Actions:
         Pick(x)
-        Preconditions: NotBlock(C0,x), Exist(x)
-        Effects: Get(x), !Exist(x), NotBlock(x,C0)
+        Preconditions: NotBlock(C0,x), NotBlock(C1,x), NotBlock(C2,x), NotBlock(C3,x), NotBlock(C4,x), Exist(x)
+        Effects: Get(x), !Exist(x), NotBlock(x,C0), NotBlock(x,C1), NotBlock(x,C2), NotBlock(x,C3), NotBlock(x,C4)

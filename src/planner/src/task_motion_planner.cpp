@@ -43,7 +43,8 @@ std::unique_ptr<TaskAndMotionPlanner> TaskAndMotionPlanner::Make(
 
 std::vector<std::string> generate_partial_scene(
     const std::vector<GroundedAction>& actions, int index) {
-  std::vector<std::string> res = {"Table"};
+  // std::vector<std::string> res = {"Table"};
+  std::vector<std::string> res;
   int size = actions.size();
   for (int i = index; i < size; ++i) {
     const auto& args = actions[i].get_arg_values();
@@ -54,6 +55,7 @@ std::vector<std::string> generate_partial_scene(
                        actions[i].toString());
     }
   }
+  res.push_back("Table");
   return res;
 }
 
@@ -75,12 +77,10 @@ TmpOutput TaskAndMotionPlanner::interface(
     motion_planner_->PlanPick(scene_objects, args.front(), "Table",
                               plan_result);
     ROS_INFO("Plan with original scene finished");
-    // motion_planner_->PlanPick(scene_objects, args.front(), "Table",
-    //                           plan_result);
-    // ROS_INFO("2nd plan finished");
+
     // MockPlanner::PlanPick(scene_objects, args.front(), "Table", plan_result,
     //                       test_cnt++);
-    ros::Duration(10.0).sleep();
+
     if (plan_result != nullptr) {
       // if (false) {
       // TODO: execute interface

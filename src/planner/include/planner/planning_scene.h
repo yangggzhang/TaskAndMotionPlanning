@@ -28,11 +28,12 @@ class PlanningScene {
 
   std::vector<std::string> getCollisionObjects();
 
-  bool reset();
+  bool resetScene();
 
  private:
   PlanningScene(const PlanningSceneParam &param);
-
+  bool updateScene(
+      const std::vector<moveit_msgs::CollisionObject> &collision_objects);
   bool LoadCollisionObjects(
       ros::NodeHandle &ph,
       std::vector<moveit_msgs::CollisionObject> &collision_objects);

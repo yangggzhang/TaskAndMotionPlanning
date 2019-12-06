@@ -52,7 +52,7 @@ bool PlanningScene::ValidateScene(
 bool PlanningScene::GetPlanningScene(
     const std::vector<std::string> &scene_objects,
     moveit_msgs::PlanningScene &scene_msgs) {
-  scene_msgs = moveit_msgs::PlanningScene();
+  // scene_msgs = moveit_msgs::PlanningScene();
   scene_msgs.robot_state.is_diff = false;
   scene_msgs.is_diff = true;
   for (const std::string &object : scene_objects) {
@@ -65,6 +65,7 @@ bool PlanningScene::GetPlanningScene(
           collision_object_table_[object]);
     }
   }
+  updateScene(scene_msgs.world.collision_objects);
   return true;
 }
 
@@ -87,17 +88,17 @@ std::vector<std::string> PlanningScene::getCollisionObjects() {
   }
   return std::move(key_set);
 }
+bool PlanningScene::updateScene(
+    const std::vector<moveit_msgs::CollisionObject> &collision_objects) {
+  resetScene();
+  return scene_->applyCollisionObjects(collision_objects);
+}
 
-bool PlanningScene::reset() {
-  scene_.reset(new moveit::planning_interface::PlanningSceneInterface());
-  std::vector<moveit_msgs::CollisionObject> collision_objects =
-      scene_param_.GetCollisionObjects();
-  if (collision_objects.empty()) {
-    ROS_ERROR("Missing collision objects in the scene!");
-    return false;
+bool PlanningScene::resetScene() {
+  auto objs = scene_->getKnownObjectNames();
+  for (const auto &o : objs) {
+    scene_->removeCollisionObjects(objs);
   }
-  scene_->applyCollisionObjects(collision_objects);
-
   return true;
 }
 
