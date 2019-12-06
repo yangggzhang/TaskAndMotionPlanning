@@ -1,3 +1,4 @@
+#include <math.h> /* isnan, sqrt */
 #include <tf2_geometry_msgs/tf2_geometry_msgs.h>
 
 #include "planner/motion_planner.h"
@@ -60,10 +61,9 @@ bool MotionPlanner::ConstructGrasp(
   grasp_candidates.resize(params_.grasps.size());
   for (size_t i = 0; i < params_.grasps.size(); ++i) {
     grasp_candidates[i].grasp_pose.header.frame_id = params_.world_frame;
-
     tf2::Quaternion object_orientation;
-    tf2::convert(object_orientation,
-                 object_to_pickup.primitive_poses[0].orientation);
+    tf2::convert(object_to_pickup.primitive_poses[0].orientation,
+                 object_orientation);
     tf2::Vector3 object_position;
     tf2::fromMsg(object_to_pickup.primitive_poses[0].position, object_position);
     tf2::Transform object_transform(object_orientation, object_position);
@@ -146,6 +146,7 @@ bool MotionPlanner::ConstructPickupGoal(
     ROS_ERROR_STREAM("Can not construct grasp poses for : " << pickup_object);
     return false;
   }
+
   goal.possible_grasps = grasp_candidates;
   goal.allow_gripper_support_collision = true;
   goal.planning_options.plan_only = params_.plan_only;

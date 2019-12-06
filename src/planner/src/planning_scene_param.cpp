@@ -1,6 +1,8 @@
 #include "planner/planning_scene_param.h"
 #include "planner/planning_utils.h"
 
+#include <tf2_geometry_msgs/tf2_geometry_msgs.h>
+
 namespace tamp {
 namespace scene {
 PlanningSceneParam::PlanningSceneParam(){};
@@ -116,6 +118,21 @@ bool PlanningSceneParam::ParseFromRosParam(ros::NodeHandle &ph) {
     collision_object.primitive_poses[0].position.x = primitive_poses[0];
     collision_object.primitive_poses[0].position.y = primitive_poses[1];
     collision_object.primitive_poses[0].position.z = primitive_poses[2];
+
+    std::vector<double> primitive_orientation;
+    if (!utils::GetParam(object_param, "primitive_orientation",
+                         primitive_orientation)) {
+      return false;
+    }
+    if (primitive_poses.size() != 3) {
+      return false;
+    }
+    tf2::Quaternion obj_orientation;
+    obj_orientation.setRPY(primitive_orientation[0], primitive_orientation[1],
+                           primitive_orientation[2]);
+
+    collision_object.primitive_poses[0].orientation =
+        tf2::toMsg(obj_orientation);
 
     collision_object.operation = collision_object.ADD;
 
