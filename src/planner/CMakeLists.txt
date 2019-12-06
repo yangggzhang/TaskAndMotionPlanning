@@ -143,11 +143,14 @@ add_library(${PROJECT_NAME}
   src/planning_scene_param.cpp
   src/task_motion_planner.cpp
   src/mock_planner.cpp
+  src/motion_executor.cpp
+  src/motion_executor_params.cpp
   src/motion_planner.cpp
   src/motion_planner_params.cpp
   src/task_planner.cpp
   src/task_planner_util.cpp
   src/trajectory_feedback.cpp
+  src/motion_executor_params.cpp
 )
 
 

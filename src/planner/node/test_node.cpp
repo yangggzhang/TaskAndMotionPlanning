@@ -1,3 +1,4 @@
+#include "planner/motion_executor.h"
 #include "planner/motion_planner.h"
 #include "planner/planning_scene.h"
 #include "planner/trajectory_feedback.h"
@@ -22,6 +23,14 @@ int main(int argc, char** argv) {
     ROS_ERROR("Can not make motion planner!");
     return -1;
   }
+
+  std::unique_ptr<tamp::executor::MotionExecutor> controller_ptr =
+      tamp::executor::MotionExecutor::MakeFromRosParam(ph, scene_ptr);
+  if (controller_ptr == nullptr) {
+    ROS_ERROR("Can not make controller!");
+    return -1;
+  }
+
   std::unique_ptr<tamp::feedback::TrajectoryFeedback> trajectory_feedback_ptr =
       tamp::feedback::TrajectoryFeedback::MakeFromShared(scene_ptr);
   if (trajectory_feedback_ptr == nullptr) {
@@ -47,6 +56,12 @@ int main(int argc, char** argv) {
   }
 
   ros::WallDuration(1.0).sleep();
+
+  if (controller_ptr->ExecutePick(object1, plan_results)) {
+    ROS_INFO_STREAM("Execute plan!");
+  } else {
+    ROS_INFO_STREAM("Can not execute plan!");
+  }
 
   std::vector<std::string> collided_objects;
 
