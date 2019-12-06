@@ -20,7 +20,7 @@ class MotionPlanner {
   MotionPlanner() = delete;
 
   static std::unique_ptr<MotionPlanner> MakeUniqueFromRosParam(
-      const ros::NodeHandle& ph,
+      ros::NodeHandle& ph,
       std::shared_ptr<scene::PlanningScene> planning_scene_interface);
 
   // Return True 1. plan_result nullptr -> not available plan
@@ -33,7 +33,7 @@ class MotionPlanner {
  private:
   MotionPlanner(std::shared_ptr<scene::PlanningScene> planning_scene_interface,
                 std::unique_ptr<PickupPlanner> planner,
-                const MotionPlannerParams& params);
+                const MotionPlannerParams& params, ros::NodeHandle& ph);
 
   bool ConstructPickupGoal(const std::vector<std::string>& scene_objects,
                            const std::string& pickup_object,
@@ -50,6 +50,8 @@ class MotionPlanner {
   std::unique_ptr<PickupPlanner> pickup_planner_;
 
   MotionPlannerParams params_;
+  ros::Publisher pickup_goal_pub;
+  ros::Publisher planning_scene_pub;
 };
 }  // namespace planner
 }  // namespace tamp

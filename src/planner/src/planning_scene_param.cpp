@@ -7,7 +7,7 @@ namespace tamp {
 namespace scene {
 PlanningSceneParam::PlanningSceneParam(){};
 
-bool PlanningSceneParam::ParseFromRosParam(const ros::NodeHandle &ph) {
+bool PlanningSceneParam::ParseFromRosParam(ros::NodeHandle &ph) {
   collision_objects_.clear();
   XmlRpc::XmlRpcValue object_param_list;
   ph.getParam("collision_objects", object_param_list);
@@ -131,6 +131,21 @@ bool PlanningSceneParam::ParseFromRosParam(const ros::NodeHandle &ph) {
     collision_object.primitive_poses[0].position.x = primitive_poses[0];
     collision_object.primitive_poses[0].position.y = primitive_poses[1];
     collision_object.primitive_poses[0].position.z = primitive_poses[2];
+    collision_object.primitive_poses[0].orientation =
+        tf2::toMsg(obj_orientation);
+
+    std::vector<double> primitive_orientation;
+    if (!utils::GetParam(object_param, "primitive_orientation",
+                         primitive_orientation)) {
+      return false;
+    }
+    if (primitive_poses.size() != 3) {
+      return false;
+    }
+    tf2::Quaternion obj_orientation;
+    obj_orientation.setRPY(primitive_orientation[0], primitive_orientation[1],
+                           primitive_orientation[2]);
+
     collision_object.primitive_poses[0].orientation =
         tf2::toMsg(obj_orientation);
 

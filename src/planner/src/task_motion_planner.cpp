@@ -1,7 +1,11 @@
 #include "planner/task_motion_planner.h"
+#include "planner/mock_planner.h"
 
 namespace tamp {
 namespace planner {
+static int test_cnt = 0;
+static int test_cnt_cc = 0;
+
 TaskAndMotionPlanner::TaskAndMotionPlanner(
     std::shared_ptr<scene::PlanningScene> planning_scene,
     std::unique_ptr<MotionPlanner> motion_planner,
@@ -11,7 +15,7 @@ TaskAndMotionPlanner::TaskAndMotionPlanner(
       trajectory_feedback_(std::move(trajectory_feedback)) {}
 
 std::unique_ptr<TaskAndMotionPlanner> TaskAndMotionPlanner::Make(
-    const ros::NodeHandle& ph) {
+    ros::NodeHandle& ph) {
   std::shared_ptr<scene::PlanningScene> planning_scene =
       scene::PlanningScene::MakeSharedFromRosParam(ph);
   if (planning_scene == nullptr) {
@@ -39,7 +43,8 @@ std::unique_ptr<TaskAndMotionPlanner> TaskAndMotionPlanner::Make(
 
 std::vector<std::string> generate_partial_scene(
     const std::vector<GroundedAction>& actions, int index) {
-  std::vector<std::string> res = {"Table"};
+  // std::vector<std::string> res = {"Table"};
+  std::vector<std::string> res;
   int size = actions.size();
   for (int i = index; i < size; ++i) {
     const auto& args = actions[i].get_arg_values();
@@ -50,6 +55,7 @@ std::vector<std::string> generate_partial_scene(
                        actions[i].toString());
     }
   }
+  res.push_back("Table");
   return res;
 }
 
@@ -67,9 +73,16 @@ TmpOutput TaskAndMotionPlanner::interface(
       ROS_ERROR_STREAM("Argument is empty in GroundedAction" +
                        action.toString());
     }
+
     motion_planner_->PlanPick(scene_objects, args.front(), "Table",
                               plan_result);
+    ROS_INFO("Plan with original scene finished");
+
+    // MockPlanner::PlanPick(scene_objects, args.front(), "Table", plan_result,
+    //                       test_cnt++);
+
     if (plan_result != nullptr) {
+      // if (false) {
       // TODO: execute interface
       // execute(plan_result);
       continue;
@@ -79,10 +92,16 @@ TmpOutput TaskAndMotionPlanner::interface(
           generate_partial_scene(actions, i);
       motion_planner_->PlanPick(partial_scene_objects, args.front(), "Table",
                                 plan_result);
+      ROS_INFO("Plan with partial scene finished");
+      // MockPlanner::PlanPick(partial_scene_objects, args.front(), "Table",
+      //                       plan_result, test_cnt++);
       if (plan_result != nullptr) {
         // use collision checker to find which obj blocks the plan
-        trajectory_feedback_->GetCollisionFeedback(scene_objects, args.front(), plan_result,
-                                                   output.obstacles);
+        trajectory_feedback_->GetCollisionFeedback(
+            scene_objects, args.front(), plan_result, output.obstacles);
+
+        // MockPlanner::GetCollisionFeedback(scene_objects, plan_result,
+        //                                   output.obstacles, test_cnt_cc++);
         output.plan_status = PlannerStatus::REPLAN;
         output.fail_step_index = i;
         return output;
@@ -94,7 +113,7 @@ TmpOutput TaskAndMotionPlanner::interface(
   }
   output.plan_status = PlannerStatus::SUCCESS;
   return output;
-}
+}  // namespace planner
 
 }  // namespace planner
 }  // namespace tamp

@@ -11,13 +11,14 @@ class TaskPlanner {
  public:
   TaskPlanner() = delete;
   static std::unique_ptr<TaskPlanner> MakeFromRosParam(
-      const ros::NodeHandle& ph);
+      ros::NodeHandle& ph);
+
+  std::vector<GroundedAction> run(Heuristic heuristicOption = NoHeuristic);
 
  private:
   Env* env;
   TaskPlanner(const std::string& description_file,
               std::unique_ptr<TaskAndMotionPlanner> task_and_motion_planner);
-  std::vector<GroundedAction> run(Heuristic heuristicOption = NoHeuristic);
   std::vector<GroundedAction> aStar(
       const GroundedConditionSet& startConditionSet,
       const GroundedConditionSet& goalConditionSet,

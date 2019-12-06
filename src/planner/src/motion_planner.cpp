@@ -1,3 +1,4 @@
+#include <math.h> /* isnan, sqrt */
 #include <tf2_geometry_msgs/tf2_geometry_msgs.h>
 
 #include "planner/motion_planner.h"
@@ -7,19 +8,33 @@ namespace planner {
 
 MotionPlanner::MotionPlanner(
     std::shared_ptr<scene::PlanningScene> planning_scene_interface,
-    std::unique_ptr<PickupPlanner> planner, const MotionPlannerParams& params)
+    std::unique_ptr<PickupPlanner> planner, const MotionPlannerParams& params,
+    ros::NodeHandle& ph)
     : planning_scene_interface_(std::move(planning_scene_interface)),
       pickup_planner_(std::move(planner)),
-      params_(params) {}
+      params_(params) {
+  if (!pickup_planner_->isServerConnected()) {
+    ROS_ERROR("Pick up server is not connected!");
+  } else {
+    ROS_INFO("Pick up server connected!");
+  }
+  std::string a = "pickupgoal";
+  std::string b = "planningscene";
+  this->pickup_goal_pub =
+      ph.advertise<moveit_msgs::PickupGoal>("pickupgoal", 10);
+  this->planning_scene_pub =
+      ph.advertise<moveit_msgs::PlanningScene>("planningscene", 10);
+}
 
 std::unique_ptr<MotionPlanner> MotionPlanner::MakeUniqueFromRosParam(
-    const ros::NodeHandle& ph,
+    ros::NodeHandle& ph,
     std::shared_ptr<scene::PlanningScene> planning_scene_interface) {
   MotionPlannerParams param;
   if (!param.LoadFromRosParams(ph)) {
     ROS_ERROR("Failed to load motion planner parameters!");
     return nullptr;
   }
+  //   ROS_INFO_STREAM("Planner name: " << param.planner_name);
   std::unique_ptr<PickupPlanner> pickup_planner =
       std::unique_ptr<PickupPlanner>(
           new PickupPlanner(param.planner_name, true));
@@ -29,8 +44,10 @@ std::unique_ptr<MotionPlanner> MotionPlanner::MakeUniqueFromRosParam(
   } else {
     ROS_INFO_STREAM("Pick up planner is up!");
   }
-  return std::unique_ptr<MotionPlanner>(new MotionPlanner(
-      std::move(planning_scene_interface), std::move(pickup_planner), param));
+
+  return std::unique_ptr<MotionPlanner>(
+      new MotionPlanner(std::move(planning_scene_interface),
+                        std::move(pickup_planner), param, ph));
 }
 
 bool MotionPlanner::ConstructGrasp(
@@ -44,7 +61,6 @@ bool MotionPlanner::ConstructGrasp(
   grasp_candidates.resize(params_.grasps.size());
   for (size_t i = 0; i < params_.grasps.size(); ++i) {
     grasp_candidates[i].grasp_pose.header.frame_id = params_.world_frame;
-
     tf2::Quaternion object_orientation;
     tf2::convert(object_to_pickup.primitive_poses[0].orientation,
                  object_orientation);
@@ -119,6 +135,8 @@ bool MotionPlanner::ConstructPickupGoal(
     return false;
   }
 
+  planning_scene_pub.publish(pickup_scene);
+
   goal.target_name = pickup_object;
   goal.group_name = params_.move_group;
   goal.support_surface_name = pickup_object_from;
@@ -128,6 +146,7 @@ bool MotionPlanner::ConstructPickupGoal(
     ROS_ERROR_STREAM("Can not construct grasp poses for : " << pickup_object);
     return false;
   }
+
   goal.possible_grasps = grasp_candidates;
   goal.allow_gripper_support_collision = true;
   goal.planning_options.plan_only = params_.plan_only;
@@ -147,6 +166,13 @@ bool MotionPlanner::PlanPick(const std::vector<std::string>& scene_objects,
     ROS_ERROR("Pick up server is not connected!");
     return false;
   }
+  ROS_INFO_STREAM("Start to plan for pick up");
+  ROS_INFO_STREAM("Scene objects: ");
+  for (const auto& obj : scene_objects) {
+    ROS_INFO_STREAM(obj);
+  }
+  ROS_INFO_STREAM("Pick up objects: ");
+  ROS_INFO_STREAM(pickup_object);
 
   moveit_msgs::PickupGoal pickup_goal;
   if (!ConstructPickupGoal(scene_objects, pickup_object, pickup_object_from,
@@ -155,6 +181,7 @@ bool MotionPlanner::PlanPick(const std::vector<std::string>& scene_objects,
                      << pickup_object << " on " << pickup_object_from);
     return false;
   }
+  pickup_goal_pub.publish(pickup_goal);
 
   const auto state = pickup_planner_->sendGoalAndWait(
       pickup_goal, ros::Duration(params_.max_planning_time_sec));

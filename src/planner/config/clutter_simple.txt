@@ -1,0 +1,8 @@
+Symbols: C3,Table
+Initial conditions: NotBlock(C3,C3), Exist(C3)
+Goal conditions: Get(C3)
+
+Actions:
+        Pick(x)
+        Preconditions: NotBlock(C3,x), Exist(x)
+        Effects: Get(x), !Exist(x), NotBlock(x,C3)

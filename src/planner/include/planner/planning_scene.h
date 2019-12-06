@@ -14,7 +14,7 @@ class PlanningScene {
   PlanningScene() = delete;
 
   static std::shared_ptr<PlanningScene> MakeSharedFromRosParam(
-      const ros::NodeHandle &ph);
+      ros::NodeHandle &ph);
 
   bool ValidateScene(const std::vector<std::string> &scene_objects);
 
@@ -28,13 +28,14 @@ class PlanningScene {
 
   std::vector<std::string> getCollisionObjects();
 
-  bool reset();
+  bool resetScene();
 
  private:
   PlanningScene(const PlanningSceneParam &param);
-
+  bool updateScene(
+      const std::vector<moveit_msgs::CollisionObject> &collision_objects);
   bool LoadCollisionObjects(
-      const ros::NodeHandle &ph,
+      ros::NodeHandle &ph,
       std::vector<moveit_msgs::CollisionObject> &collision_objects);
 
   std::unique_ptr<moveit::planning_interface::PlanningSceneInterface> scene_;

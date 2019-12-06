@@ -4,7 +4,7 @@
 namespace tamp {
 namespace planner {
 
-bool MotionPlannerParams::LoadFromRosParams(const ros::NodeHandle& ph) {
+bool MotionPlannerParams::LoadFromRosParams(ros::NodeHandle& ph) {
   if (!ph.getParam("move_group", move_group)) {
     ROS_ERROR_STREAM("Missing move group!");
     return false;
