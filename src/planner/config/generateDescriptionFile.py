@@ -4,11 +4,8 @@ import io
 import itertools
 
 # global parameters, load from somewhere later
-saveDescriptionFile = "./test.txt"
-goalCondition =  "Get(cylinder3)"
-action = "Pick"
-action_args = ["x"]
 
+yaml_path = "CollisionObjects.yaml"
 def generateConditions(condition, num_args, object_list):
     
     condition_arguments = list(itertools.product(object_list,repeat=num_args))
@@ -42,12 +39,13 @@ def generateActions(action, args, movable_list):
     return action_string
 if __name__ == '__main__':
     # Read YAML file
-    with open("CollisionObjects.yaml", 'r') as stream:
+    with open(yaml_path, 'r') as stream:
         data_loaded = yaml.safe_load(stream)
 
-    for i in range(len(data_loaded["collision_objects"])):
-
-        print(data_loaded["collision_objects"][i]["id"]=='table1')
+    saveDescriptionFile = data_loaded["description_file_path"]
+    goalCondition =  data_loaded["goal_condition"]
+    action = data_loaded["action"]
+    action_args = data_loaded["action_args"]
 
     num_symbols = len(data_loaded["collision_objects"])
     movable_list = []
@@ -67,10 +65,6 @@ if __name__ == '__main__':
             else:
                 text_file.write("\n")
         # set up initial conditions
-        cond = generateConditions("NotBlock", 2, movable_list)
-        print(cond)
-        cond = generateConditions("Exist", 1, all_list)
-        print(cond)
         text_file.write("Initial conditions: ")
         text_file.write(generateConditions("NotBlock", 2, movable_list)+", ")
         text_file.write(generateConditions("Exist", 1, all_list))
@@ -79,6 +73,7 @@ if __name__ == '__main__':
         text_file.write("\n")
         text_file.write("Actions:\n")
         text_file.write(generateActions(action, action_args, movable_list))
+    print("successfully write tasks in txt file ^_^")
 
 
 
