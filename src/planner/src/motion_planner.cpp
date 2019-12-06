@@ -134,6 +134,7 @@ bool MotionPlanner::ConstructPickupGoal(
     ROS_ERROR("Can not set up planning scene for pick up action");
     return false;
   }
+  ROS_ERROR("Before publish planning scene");
   planning_scene_pub.publish(pickup_scene);
 
   goal.target_name = pickup_object;

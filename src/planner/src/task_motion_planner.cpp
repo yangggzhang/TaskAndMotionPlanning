@@ -80,6 +80,7 @@ TmpOutput TaskAndMotionPlanner::interface(
     // ROS_INFO("2nd plan finished");
     // MockPlanner::PlanPick(scene_objects, args.front(), "Table", plan_result,
     //                       test_cnt++);
+    ros::Duration(10.0).sleep();
     if (plan_result != nullptr) {
       // if (false) {
       // TODO: execute interface
