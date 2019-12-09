@@ -3,7 +3,7 @@ world_frame: "panda_link0"
 planner_name: "pickup"
 max_planning_time_sec: 30
 plan_only: true
-num_planning_attempts: 3
+num_planning_attempts: 30
 grasps:
   - pose_orientation: [-1.57079632679, -0.78539816339, -1.57079632679]
     pose_position: [ -0.085, 0.0, 0.0]
