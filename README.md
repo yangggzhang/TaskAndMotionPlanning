@@ -10,5 +10,7 @@ roslaunch panda_moveit_config demo.launch
 ```
 Terminal 2:
 ```
-roslaunch planner TAMP.launch
+roslaunch planner scene1.launch
+roslaunch planner scene2.launch
+roslaunch planner scene3.launch
 ```
